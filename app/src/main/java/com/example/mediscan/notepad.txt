@@ -10,3 +10,58 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+
+Extract the following details from the prescription in a structured JSON format:
+Medicine name
+Dose
+Frequency (how many times per day)
+Duration (how many days)
+Times (when the medicine should be taken)
+Food instructions (before or after food)
+Rules for frequency, times, and food instructions:
+If "every X hours" is mentioned, calculate the number of doses per day based on a 24-hour period, subtracting 10 hours for sleep. Distribute the doses evenly throughout the waking hours.
+
+Example: "Take 1 tablet every 6 hours for 5 days after food."
+{
+  "medicine_name": "Paracetamol",
+  "dose": "500mg",
+  "frequency": "3 times per day",
+  "duration": "5 days",
+  "times": ["08:00 AM", "02:00 PM", "08:00 PM"],
+  "food_instruction": "after food"
+}
+If "bedtime" is mentioned, the medicine is taken once at 09:00 PM.
+
+Example: "Take at bedtime for 5 days before food."
+{
+  "medicine_name": "Paracetamol",
+  "dose": "500mg",
+  "frequency": "once at bedtime",
+  "duration": "5 days",
+  "times": ["09:00 PM"],
+  "food_instruction": "after food"
+}
+If the frequency is given in "1-0-1" format (morning-noon-night):
+
+"1" means the medicine should be taken, and "0" means it should be skipped.
+Example: "1-0-1 for 7 days, after food."
+{
+  "medicine_name": "Amoxicillin",
+  "dose": "250mg",
+  "frequency": "2 times per day",
+  "duration": "7 days",
+  "times": ["08:00 AM", "08:00 PM"],
+  "food_instruction": "after food"
+}
+If no frequency is specified, assume 3 times per day at 08:00 AM, 02:00 PM, and 08:00 PM.
+
+Example: "Take for 5 days before food."
+{
+  "medicine_name": "Ibuprofen",
+  "dose": "400mg",
+  "frequency": "3 times per day",
+  "duration": "5 days",
+  "times": ["08:00 AM", "02:00 PM", "08:00 PM"],
+  "food_instruction": "before food"
+}

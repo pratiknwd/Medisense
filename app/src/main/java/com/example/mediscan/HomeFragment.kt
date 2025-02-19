@@ -26,7 +26,13 @@ class HomeFragment : BaseFragment() {
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.textView.text = FRAG_NAME
+        binding.goToPrescriptionBtn.setOnClickListener {
+            (requireActivity() as MainActivity).loadFragment(requireActivity().supportFragmentManager, PrescriptionFragment.newInstance(), PrescriptionFragment.FRAG_NAME)
+        }
+        
+        binding.goToMedicineBtn.setOnClickListener {
+            (requireActivity() as MainActivity).loadFragment(requireActivity().supportFragmentManager, MedicineScanFragment.newInstance(), MedicineScanFragment.FRAG_NAME)
+        }
     }
     
     override fun onResume() {

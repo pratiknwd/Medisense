@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
     
-    private fun loadFragment(fragmentManager: FragmentManager, fragment: Fragment, tag: String) {
+    fun loadFragment(fragmentManager: FragmentManager, fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
             .replace(R.id.frag_container, fragment, tag)
             .addToBackStack(null)

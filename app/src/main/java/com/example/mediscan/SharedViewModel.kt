@@ -5,7 +5,10 @@ import android.graphics.Bitmap
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.mediscan.prescription.PrescriptionModel
+import com.example.mediscan.prescription.PrescriptionModelItem
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.ai.client.generativeai.type.generationConfig
@@ -22,9 +25,19 @@ private const val MODEL_NAME_2 = "gemini-pro-vision"
 private const val GEMINI_TAG = "Gemini"
 private const val TTS_TAG = "TTS"
 
+enum class P_STATES {
+    LOADING,
+    ERROR,
+    EMPTY,
+    NOT_EMPTY
+}
+
 class SharedViewModel(applicationContext: Application) : AndroidViewModel(applicationContext) {
     private lateinit var tts: TextToSpeech
     private var generativeModel: GenerativeModel
+    private val _prescription = MutableLiveData<P_STATES>()
+    val prescription: LiveData<P_STATES> get() = _prescription
+    var prescriptionModel: MutableList<PrescriptionModelItem> = mutableListOf()
     
     init {
         val generationConfig = generationConfig {
@@ -58,7 +71,15 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
     
     fun stopSpeech() = tts.stop()
     
-    fun getResponse(bitmap: Bitmap, prompt: String, callback: (String?) -> Unit) {
+    fun getResponseForPrescription(bitmap: Bitmap, prompt: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            _prescription.postValue(P_STATES.LOADING)
+            val response = getResponseFromGemini(bitmap, prompt)
+            getPrescription(response)
+        }
+    }
+    
+    fun getResponseForMedicine(bitmap: Bitmap, prompt: String, callback: (String?) -> Unit) {
         callback("loading response ...")
         CoroutineScope(Dispatchers.Main).launch {
             val response = getResponseFromGemini(bitmap, prompt)
@@ -88,13 +109,25 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
         super.onCleared()
     }
     
-    fun getPrescription(json: String?, callback: (String) -> Unit) {
-        val trimmedJson = trimJson(json!!)
-        val model = formatJsonForPrescription(trimmedJson)?.toList()
-        callback(model.toString())
+    private fun getPrescription(json: String?) {
+        val trimmedJson = trimJson(json)
+        val model: PrescriptionModel? = formatJsonForPrescription(trimmedJson)
+        if (model == null) {
+            _prescription.postValue(P_STATES.ERROR)
+            return
+        }
+        val modelList: List<PrescriptionModelItem> = model.toList()
+        if (modelList.isEmpty()) {
+            _prescription.postValue(P_STATES.EMPTY)
+            return
+        }
+        prescriptionModel.clear()
+        prescriptionModel.addAll(modelList)
+        _prescription.postValue(P_STATES.NOT_EMPTY)
     }
     
-    private fun trimJson(json: String): String {
+    private fun trimJson(json: String?): String? {
+        json ?: return null
         var trim = json.trim().trimIndent()
         trim = trim.substring(7, trim.length - 3)
         return trim

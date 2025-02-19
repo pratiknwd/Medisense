@@ -26,7 +26,7 @@ class MedicineScanFragment : BaseFragment() {
         uri?.let {
             this.uri = uri
             val bitmapFromUri = ImageUtil.getBitmapFromUri(requireContext(), uri)
-            viewModel.getResponse(bitmapFromUri, DEFAULT_PROMPT) { s: String? ->
+            viewModel.getResponseForMedicine(bitmapFromUri, DEFAULT_PROMPT) { s: String? ->
                 if (!s.isNullOrBlank()) {
                     
                     this.response = s

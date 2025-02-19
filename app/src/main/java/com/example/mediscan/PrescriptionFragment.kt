@@ -10,64 +10,77 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.example.mediscan.databinding.FragmentPrescriptionBinding
+import com.example.mediscan.prescription.PrescriptionModelItem
 
-private const val PRESCRIPTION_PROMPT = "I have an image of a prescription, and I need you to extract the following details in a structured JSON Array with proper brackets []format:\n" +
-        "\n" +
-        "Medicine name\n" +
-        "Dose\n" +
-        "Frequency (how many times per day)\n" +
-        "Duration (how many days)\n" +
-        "Times (when the medicine should be taken)\n" +
-        "Rules for frequency and times:\n" +
-        "If \"every X hours\" is mentioned, calculate how many times the medicine should be taken in a day based on a 24-hour day, subtracting 10 hours for sleep. If the frequency isn't specified, assume 3 times per day, with the first dose at 08:00 AM.\n" +
-        "If \"bedtime\" is mentioned, the medicine is taken once at 21:00.\n" +
-        "Example:\n" +
-        "For \"Take 1 tablet of Paracetamol 500mg every 6 hours for 5 days.\"\n" +
-        "\n" +
-        "JSON format:\n" +
-        "\n" +
-        "json\n" +
-        "Copy\n" +
-        "{\n" +
-        "  \"medicine_name\": \"Paracetamol\",\n" +
-        "  \"dose\": \"500mg\",\n" +
-        "  \"frequency\": \"3 times per day\",\n" +
-        "  \"duration\": \"5 days\",\n" +
-        "  \"times\": [\n" +
-        "    \"08:00 AM\",\n" +
-        "    \"02:00 PM\",\n" +
-        "    \"08:00 PM\"\n" +
-        "  ]\n" +
-        "}\n" +
-        "If it says \"take at bedtime,\" return this:\n" +
-        "\n" +
-        "json\n" +
-        "Copy\n" +
-        "{\n" +
-        "  \"medicine_name\": \"Paracetamol\",\n" +
-        "  \"dose\": \"500mg\",\n" +
-        "  \"frequency\": \"once at bedtime\",\n" +
-        "  \"duration\": \"5 days\",\n" +
-        "  \"times\": [\n" +
-        "    \"09:00 PM\"\n" +
-        "  ]\n" +
-        "}"
+private const val PRESCRIPTION_PROMPT: String = """
+Extract the following details from the prescription in a structured JSON format:
+Medicine name
+Dose
+Frequency (how many times per day)
+Duration (how many days)
+Times (when the medicine should be taken)
+Food instructions (before or after food)
+Rules for frequency, times, and food instructions:
+If "every X hours" is mentioned, calculate the number of doses per day based on a 24-hour period, subtracting 10 hours for sleep. Distribute the doses evenly throughout the waking hours.
+
+Example: "Take 1 tablet every 6 hours for 5 days after food."
+{
+  "medicine_name": "Paracetamol",
+  "dose": "500mg",
+  "frequency": "3 times per day",
+  "duration": "5 days",
+  "times": ["08:00 AM", "02:00 PM", "08:00 PM"],
+  "food_instruction": "after food"
+}
+If "bedtime" is mentioned, the medicine is taken once at 09:00 PM.
+
+Example: "Take at bedtime for 5 days before food."
+{
+  "medicine_name": "Paracetamol",
+  "dose": "500mg",
+  "frequency": "once at bedtime",
+  "duration": "5 days",
+  "times": ["09:00 PM"],
+  "food_instruction": "after food"
+}
+If the frequency is given in "1-0-1" format (morning-noon-night):
+
+"1" means the medicine should be taken, and "0" means it should be skipped.
+Example: "1-0-1 for 7 days, after food."
+{
+  "medicine_name": "Amoxicillin",
+  "dose": "250mg",
+  "frequency": "2 times per day",
+  "duration": "7 days",
+  "times": ["08:00 AM", "08:00 PM"],
+  "food_instruction": "after food"
+}
+If no frequency is specified, assume 3 times per day at 08:00 AM, 02:00 PM, and 08:00 PM.
+
+Example: "Take for 5 days before food."
+{
+  "medicine_name": "Ibuprofen",
+  "dose": "400mg",
+  "frequency": "3 times per day",
+  "duration": "5 days",
+  "times": ["08:00 AM", "02:00 PM", "08:00 PM"],
+  "food_instruction": "before food"
+}
+"""
 
 class PrescriptionFragment : BaseFragment() {
     private var _binding: FragmentPrescriptionBinding? = null
     private val binding get() = _binding!!
     private var uri: Uri? = null
-    private lateinit var viewModel: SharedViewModel
+    private lateinit var sharedViewModel: SharedViewModel
     
     
     private val pickImageLauncher: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            this.uri = uri
-            val bitmapFromUri = ImageUtil.getBitmapFromUri(requireContext(), uri)
+            this.uri = it
+            val bitmapFromUri = ImageUtil.getBitmapFromUri(requireContext(), it)
             binding.imageView.setImageBitmap(bitmapFromUri)
-            viewModel.getResponse(bitmapFromUri, PRESCRIPTION_PROMPT) { s: String? ->
-                viewModel.getPrescription(s) { s -> binding.prescriptionTextView.text = s }
-            }
+            sharedViewModel.getResponseForPrescription(bitmapFromUri, PRESCRIPTION_PROMPT)
         }
     }
     
@@ -77,7 +90,7 @@ class PrescriptionFragment : BaseFragment() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         Log.d("9155881234", "created $FRAG_NAME")
     }
     
@@ -88,11 +101,25 @@ class PrescriptionFragment : BaseFragment() {
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedViewModel.prescription.observe(viewLifecycleOwner) {
+            it ?: return@observe
+            binding.prescriptionTextView.text = when (it) {
+                P_STATES.LOADING -> "Loading"
+                P_STATES.ERROR -> "Error"
+                P_STATES.EMPTY -> "Empty"
+                P_STATES.NOT_EMPTY -> getFormattedPrescription(sharedViewModel.prescriptionModel)
+            }
+        }
+        
         binding.chooseImageBtn.setOnClickListener { pickImageLauncher.launch("image/*") }
     }
     
-    private fun onSendPrescription() {
-    
+    private fun getFormattedPrescription(list: List<PrescriptionModelItem>): String {
+        val sb = StringBuilder()
+        list.forEach {
+            sb.append(it.toString()).append("\n\n")
+        }
+        return sb.toString()
     }
     
     override fun onResume() {
