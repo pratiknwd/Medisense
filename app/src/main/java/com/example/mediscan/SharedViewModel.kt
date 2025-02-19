@@ -5,9 +5,12 @@ import android.graphics.Bitmap
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import com.example.mediscan.prescription.PrescriptionModel
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.ai.client.generativeai.type.generationConfig
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,5 +86,31 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             tts.shutdown()
         }
         super.onCleared()
+    }
+    
+    fun getPrescription(json: String?, callback: (String) -> Unit) {
+        val trimmedJson = trimJson(json!!)
+        val model = formatJsonForPrescription(trimmedJson)?.toList()
+        callback(model.toString())
+    }
+    
+    private fun trimJson(json: String): String {
+        var trim = json.trim().trimIndent()
+        trim = trim.substring(7, trim.length - 3)
+        return trim
+    }
+    
+    private fun formatJsonForPrescription(json: String?): PrescriptionModel? {
+        return try {
+            if (json.isNullOrBlank()) {
+                Log.e("9155881234", "JSON is null or empty")
+                null
+            } else {
+                Gson().fromJson(json, PrescriptionModel::class.java)
+            }
+        } catch (e: JsonSyntaxException) {
+            Log.e("9155881234", "Error parsing JSON: ${e.message}")
+            null
+        }
     }
 }

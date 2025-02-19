@@ -59,6 +59,7 @@ dependencies {
     // Coil (for image loading and display) - Optional, but recommended
     implementation(libs.coil)
 
+    implementation libs.gson
 
     // Retrofit (Alternative HTTP client, if you prefer it over the built-in)
     // implementation("com.squareup.retrofit2:retrofit:2.9.0")
