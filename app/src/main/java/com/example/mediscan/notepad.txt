@@ -69,3 +69,6 @@ Example: "Take for 5 days before food."
 need to check healtians app
 need to see the pdf aarzo sent me
 masking techniques
+
+first step use firebase to upload images
+check feasibility of pdf generation
