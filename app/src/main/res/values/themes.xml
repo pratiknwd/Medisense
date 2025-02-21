@@ -3,7 +3,22 @@
     <style name="Base.Theme.MediScan" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
+        <item name="toolbarStyle">@style/MyToolbarStyle</item>
     </style>
 
     <style name="Theme.MediScan" parent="Base.Theme.MediScan" />
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="WhiteDrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="MyToolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
 </resources>

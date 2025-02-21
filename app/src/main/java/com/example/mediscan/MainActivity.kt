@@ -24,12 +24,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[SharedViewModel::class.java]
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         
         // View Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+//        enableEdgeToEdge()
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout)) { v, insets ->
+//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+//            insets
+//        }
+        
+        
         
         // Set up Toolbar
         setSupportActionBar(binding.toolbar)
@@ -44,7 +51,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         )
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-        toolbar = binding.toolbar
+        toolbar = binding.toolbar.apply {
+            setTitleTextColor(resources.getColor(R.color.white, theme))
+            
+        }
         
         binding.navView.setNavigationItemSelectedListener(this)
         
