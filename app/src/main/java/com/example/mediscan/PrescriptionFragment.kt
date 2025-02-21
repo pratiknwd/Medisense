@@ -66,6 +66,14 @@ Example: "Take for 5 days before food."
   "times": ["08:00 AM", "02:00 PM", "08:00 PM"],
   "food_instruction": "before food"
 }
+Fallback Answer:
+If no prescription details are provided or if the prescription cannot be interpreted, respond with the following:
+
+json
+Copy
+{
+  "message": "Could not identify prescription. Please upload a prescription image."
+}
 """
 
 class PrescriptionFragment : BaseFragment() {
@@ -105,7 +113,7 @@ class PrescriptionFragment : BaseFragment() {
             it ?: return@observe
             binding.prescriptionTextView.text = when (it) {
                 P_STATES.LOADING -> "Loading"
-                P_STATES.ERROR -> "Error"
+                P_STATES.ERROR -> "Could not identify prescription. Please upload a prescription image."
                 P_STATES.EMPTY -> "Empty"
                 P_STATES.NOT_EMPTY -> getFormattedPrescription(sharedViewModel.prescriptionModel)
             }

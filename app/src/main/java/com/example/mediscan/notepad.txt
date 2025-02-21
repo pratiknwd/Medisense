@@ -65,3 +65,7 @@ Example: "Take for 5 days before food."
   "times": ["08:00 AM", "02:00 PM", "08:00 PM"],
   "food_instruction": "before food"
 }
+
+need to check healtians app
+need to see the pdf aarzo sent me
+masking techniques
