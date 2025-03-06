@@ -3,12 +3,12 @@ package com.example.mediscan.db.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "user")
+@Entity(tableName = "User")
 data class User(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val name: String,
+    @PrimaryKey(autoGenerate = true) val userId: Int = 0,
+    val userName: String,
+    val userAge: Int,
+    val sex: String,
     val email: String,
-) {
-
-}
+    val password: String
+)

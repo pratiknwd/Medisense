@@ -3,6 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="common_divider">#D5D5D5</color>
-
-
+    <color name="light_blue">#BEE2FF</color>
+    <color name="blue">#D7FFFE</color>
 </resources>
