@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id 'com.google.gms.google-services'
+    id("kotlin-kapt")
+    id('com.google.devtools.ksp')
 }
 
 android {
@@ -79,5 +81,18 @@ dependencies {
 
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
+
+
+    implementation "androidx.room:room-runtime:2.6.1"
+
+    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
+    // See KSP Quickstart to add KSP to your build
+    ksp "androidx.room:room-compiler:2.6.1"
+
+    // If this project only uses Java source, use the Java annotationProcessor
+    // No additional plugins are necessary
+    annotationProcessor "androidx.room:room-compiler:2.6.1"
+
+    implementation("androidx.room:room-ktx:2.6.1")
 
 }
