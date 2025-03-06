@@ -10,6 +10,6 @@
         android:id="@+id/nav_medicine"
         android:title="Scan Medicine" />
     <item
-        android:id="@+id/nav_settings"
-        android:title="Settings" />
+        android:id="@+id/nav_profile"
+        android:title="Profile" />
 </menu>
