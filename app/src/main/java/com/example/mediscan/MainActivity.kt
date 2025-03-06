@@ -28,6 +28,7 @@ import com.example.mediscan.db.entity.Report
 import com.example.mediscan.db.entity.ReportType
 import com.example.mediscan.db.entity.User
 import com.example.mediscan.db.entity.UserFoodTiming
+import com.example.mediscan.full_report.views.FullReportFragment
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -97,7 +98,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         reportTypeDao = db.reportTypeDao()
         
         // Insert dummy data
-//        insertDummyData()
+        insertDummyData()
         
         // Retrieve dummy data
         lifecycleScope.launch(Dispatchers.IO) {
@@ -154,15 +155,25 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             R.id.nav_home -> loadFragment(supportFragmentManager, HomeFragment.newInstance(), HomeFragment.FRAG_NAME)
             R.id.nav_pres -> loadFragment(supportFragmentManager, PrescriptionFragment.newInstance(), PrescriptionFragment.FRAG_NAME)
             R.id.nav_medicine -> loadFragment(supportFragmentManager, MedicineScanFragment.newInstance(), MedicineScanFragment.FRAG_NAME)
-            R.id.nav_settings -> loadFragment(supportFragmentManager, ProfileFragment.newInstance(), ProfileFragment.FRAG_NAME)
+            R.id.nav_profile -> loadFragment(supportFragmentManager, ProfileFragment.newInstance(), ProfileFragment.FRAG_NAME)
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
     
+    fun openFullReportFragment() {
+        val fragment = FullReportFragment.newInstance()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.frag_container, fragment, FullReportFragment.FRAG_NAME)
+            .addToBackStack(FullReportFragment.FRAG_NAME)
+            .commit()
+    }
+    
     fun loadFragment(fragmentManager: FragmentManager, fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
             .replace(R.id.frag_container, fragment, tag)
+            .addToBackStack(null)
             .commitAllowingStateLoss()
     }
     

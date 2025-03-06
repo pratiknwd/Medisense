@@ -26,7 +26,7 @@ class ProfileFragment : BaseFragment() {
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.textView.text = FRAG_NAME
+        binding.seeReportButton.setOnClickListener { (requireActivity() as MainActivity).openFullReportFragment() }
     }
     
     override fun onResume() {

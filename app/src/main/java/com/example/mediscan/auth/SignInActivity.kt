@@ -4,6 +4,7 @@ package com.example.mediscan.auth
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mediscan.MainActivity
@@ -22,7 +23,7 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
-        
+        enableEdgeToEdge()
         // Observe login result
         authViewModel.loginResult.observe(this) { (success, message) ->
             if (success) {

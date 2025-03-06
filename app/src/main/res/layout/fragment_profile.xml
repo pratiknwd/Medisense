@@ -7,10 +7,11 @@
     tools:context=".ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/textView"
+    <Button
+        android:id="@+id/seeReportButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="see report"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
