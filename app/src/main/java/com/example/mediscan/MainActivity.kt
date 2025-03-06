@@ -1,5 +1,6 @@
 package com.example.mediscan
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
+import com.example.mediscan.auth.SignUpActivity
 import com.example.mediscan.databinding.ActivityMainBinding
 import com.example.mediscan.db.AppDatabase
 import com.example.mediscan.db.dao.DocumentDao
@@ -97,7 +99,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         reportTypeDao = db.reportTypeDao()
 
         // Insert dummy data
-        insertDummyData()
+//        insertDummyData()
 
         // Retrieve dummy data
         lifecycleScope.launch(Dispatchers.IO) {
@@ -144,6 +146,11 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val intent = Intent(this,SignUpActivity::class.java)
+        startActivity(intent)
+    }
     
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
