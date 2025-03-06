@@ -1,6 +1,7 @@
 package com.example.mediscan
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -29,6 +30,8 @@ import com.example.mediscan.db.entity.User
 import com.example.mediscan.db.entity.UserFoodTiming
 import com.example.mediscan.full_report.views.FullReportFragment
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // https://ai.google.dev/api?lang=android
 // https://developers.google.com/maps/documentation/android-sdk/secrets-gradle-plugin#groovy
