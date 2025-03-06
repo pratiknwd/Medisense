@@ -1,6 +1,5 @@
 package com.example.mediscan
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -13,7 +12,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
-import com.example.mediscan.auth.SignUpActivity
 import com.example.mediscan.databinding.ActivityMainBinding
 import com.example.mediscan.db.AppDatabase
 import com.example.mediscan.db.dao.DocumentDao
@@ -55,15 +53,15 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[SharedViewModel::class.java]
-
+        
         // View Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
-
+        
         // Set up Toolbar
         setSupportActionBar(binding.toolbar)
-
+        
         // Set up Drawer Toggle
         toggle = ActionBarDrawerToggle(
             this,
@@ -76,19 +74,19 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         toggle.syncState()
         toolbar = binding.toolbar.apply {
             setTitleTextColor(resources.getColor(R.color.white, theme))
-
+            
         }
-
+        
         binding.navView.setNavigationItemSelectedListener(this)
-
+        
         if (savedInstanceState == null) {
             loadFragment(supportFragmentManager, HomeFragment(), HomeFragment.FRAG_NAME)
             binding.navView.setCheckedItem(R.id.nav_home)
         }
-
+        
         db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app_database")
             .build()
-
+        
         // Initialize DAOs
         userDao = db.userDao()
         medicinePlanDao = db.medicinePlanDao()
@@ -97,10 +95,10 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         documentTypeDao = db.documentTypeDao()
         reportDao = db.reportDao()
         reportTypeDao = db.reportTypeDao()
-
+        
         // Insert dummy data
 //        insertDummyData()
-
+        
         // Retrieve dummy data
         lifecycleScope.launch(Dispatchers.IO) {
             val users = userDao.getAllUsers()
@@ -108,48 +106,47 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
                 Log.d("9155881234", "User: ${user.userName}, ${user.email}")
             }
         }
-
+        
     }
-
+    
     private fun insertDummyData() {
         lifecycleScope.launch(Dispatchers.IO) {
-
+            
             // 1️⃣ Insert User First
             val user = User(userId = 1, userName = "John Doe", userAge = 25, sex = "Male", email = "john@example.com", password = "password123")
             userDao.insertUser(user)
-
+            
             // 2️⃣ Insert Document Type First (Before Document)
             val documentType = DocumentType(documentTypeId = 1, documentName = "Prescription")
             documentTypeDao.insertDocumentType(documentType)
-
+            
             // 3️⃣ Insert Document After Ensuring User and DocumentType Exist
             val document = Document(documentId = 1, userId = 1, documentTypeId = 1, documentLink = "https://")
             documentDao.insertDocument(document)
-
+            
             // 4️⃣ Insert Medicine Plan (Depends on User)
             val medicinePlan = MedicinePlan(planId = 1, userId = 1, status = true, medicineName = "Paracetamol", dose = "500mg", frequency = "1-0-1", duration = "7 days", times = "Morning, Night", foodInstruction = "After food", startDate = "2025-03-07")
             medicinePlanDao.insertMedicinePlan(medicinePlan)
-
+            
             // 5️⃣ Insert User Food Timing (Depends on User)
             val userFoodTiming = UserFoodTiming(itineraryId = 1, userId = 1, breakfastTime = "8:00 AM", lunchTime = "1:00 PM", dinnerTime = "8:00 PM")
             userFoodTimingDao.insertUserFoodTiming(userFoodTiming)
-
+            
             // 6️⃣ Insert Report Type First (Before Report)
             val reportType = ReportType(reportTypeId = 1, userId = 1, documentId = 1, reportTypeName = "Blood Test")
             reportTypeDao.insertReportType(reportType)
-
+            
             // 7️⃣ Insert Report After Ensuring User and Document Exist
             val report = Report(reportId = 1, userId = 1, documentId = 1, reportTypeId = 1, testName = "Blood Sugar", result = 90, unit = "mg/dL", upperLimit = 140, lowerLimit = 70)
             reportDao.insertReport(report)
-
+            
             println("✅ Dummy data inserted successfully!")
         }
     }
-
+    
     override fun onResume() {
         super.onResume()
-        val intent = Intent(this,SignUpActivity::class.java)
-        startActivity(intent)
+        
     }
     
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

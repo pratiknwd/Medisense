@@ -7,30 +7,33 @@ import com.example.mediscan.db.entity.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+data class AuthResult(val success: Boolean, val message: String)
+
 class AuthRepository(context: Context) {
     private val userDao: UserDao = AppDatabase.getDatabase(context).userDao()
-
-    suspend fun signUp(email: String, password: String, callback: (Boolean, String) -> Unit) {
-        withContext(Dispatchers.IO) {
+    
+    suspend fun signUp(username: String, age: Int, gender: String, email: String, password: String): AuthResult {
+        return withContext(Dispatchers.IO) {
             val existingUser = userDao.getUserByEmail(email)
             if (existingUser != null) {
-                callback(false, "User already exists")
+                AuthResult(false, "User already exists")
             } else {
-                val newUser = User(userName = "pratik", userAge = 20, sex = "Male",email = email, password = password)
+                val newUser = User(userName = username, userAge = age, sex = gender, email = email, password = password)
                 userDao.insertUser(newUser)
-                callback(true, "Account created successfully")
+                AuthResult(true, "Account created successfully")
             }
         }
     }
-
-    suspend fun signIn(email: String, password: String, callback: (Boolean, String) -> Unit) {
-        withContext(Dispatchers.IO) {
+    
+    suspend fun signIn(email: String, password: String): AuthResult {
+        return withContext(Dispatchers.IO) {
             val user = userDao.getUserByEmail(email)
             if (user != null && user.password == password) {
-                callback(true, "Login successful")
+                AuthResult(true, "Login successful")
             } else {
-                callback(false, "Invalid email or password")
+                AuthResult(false, "Invalid email or password")
             }
         }
     }
 }
+
