@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.mediscan.databinding.FragmentSettingsBinding
+import com.example.mediscan.databinding.FragmentProfileBinding
 
-class SettingsFragment : BaseFragment() {
-    private var _binding: FragmentSettingsBinding? = null
+class ProfileFragment : BaseFragment() {
+    private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     
     override fun onNavigationIconClick(iconTapped: View?) {
@@ -20,7 +20,7 @@ class SettingsFragment : BaseFragment() {
     }
     
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
     
@@ -44,9 +44,9 @@ class SettingsFragment : BaseFragment() {
     }
     
     companion object {
-        val FRAG_NAME = "Settings"
+        val FRAG_NAME = "Profile"
         
         @JvmStatic
-        fun newInstance() = SettingsFragment()
+        fun newInstance() = ProfileFragment()
     }
 }

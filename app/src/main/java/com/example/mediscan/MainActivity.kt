@@ -1,20 +1,27 @@
 package com.example.mediscan
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.mediscan.databinding.ActivityMainBinding
-import com.google.android.material.navigation.NavigationView
+import com.example.mediscan.db.MyDB
+import com.example.mediscan.db.entity.User
+import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // https://ai.google.dev/api?lang=android
 // https://developers.google.com/maps/documentation/android-sdk/secrets-gradle-plugin#groovy
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
@@ -28,15 +35,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // View Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-//        enableEdgeToEdge()
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
-        
-        
+        enableEdgeToEdge()
         
         // Set up Toolbar
         setSupportActionBar(binding.toolbar)
@@ -62,6 +61,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             loadFragment(supportFragmentManager, HomeFragment(), HomeFragment.FRAG_NAME)
             binding.navView.setCheckedItem(R.id.nav_home)
         }
+        
+        val database = MyDB.getInstance(this)
+        val userDao = database.userDao()
+        
+        // Insert dummy data
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user = User(name = "John Doe", email = "john.doe@example.com")
+            userDao.insertUser(user)
+        }
+        
+        // Retrieve dummy data
+        lifecycleScope.launch(Dispatchers.IO) {
+            val users = userDao.getAllUsers()
+            for (user in users) {
+                Log.d("9155881234", "User: ${user.name}, ${user.email}")
+            }
+        }
+        
     }
     
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -69,7 +86,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_home -> loadFragment(supportFragmentManager, HomeFragment.newInstance(), HomeFragment.FRAG_NAME)
             R.id.nav_pres -> loadFragment(supportFragmentManager, PrescriptionFragment.newInstance(), PrescriptionFragment.FRAG_NAME)
             R.id.nav_medicine -> loadFragment(supportFragmentManager, MedicineScanFragment.newInstance(), MedicineScanFragment.FRAG_NAME)
-            R.id.nav_settings -> loadFragment(supportFragmentManager, SettingsFragment.newInstance(), SettingsFragment.FRAG_NAME)
+            R.id.nav_settings -> loadFragment(supportFragmentManager, ProfileFragment.newInstance(), ProfileFragment.FRAG_NAME)
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
@@ -78,8 +95,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun loadFragment(fragmentManager: FragmentManager, fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
             .replace(R.id.frag_container, fragment, tag)
-            .addToBackStack(null)
-            .commit()
+            .commitAllowingStateLoss()
     }
     
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
