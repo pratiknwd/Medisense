@@ -52,4 +52,4 @@ def report_scan(image_file):
 #         </input>
 #         answer"""
 #         response_list.append(gemini_flash(prompt))
-    return response_list
+#     return response_list
