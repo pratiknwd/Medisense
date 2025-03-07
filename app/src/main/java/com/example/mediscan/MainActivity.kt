@@ -1,5 +1,7 @@
 package com.example.mediscan
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -12,6 +14,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
+import com.example.mediscan.auth.PEF_USER_ID
+import com.example.mediscan.auth.SHARED_PREF_NAME
+import com.example.mediscan.auth.SignInActivity
 import com.example.mediscan.databinding.ActivityMainBinding
 import com.example.mediscan.db.AppDatabase
 import com.example.mediscan.db.dao.DocumentDao
@@ -190,5 +195,16 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             return
         }
         super.onBackPressed()
+    }
+    
+    fun logoutUser(context: Context) {
+        val sharedPref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            remove(PEF_USER_ID)
+            apply()
+        }
+        val signInActivity = Intent(this, SignInActivity::class.java)
+        startActivity(signInActivity)
+        finish()
     }
 }
