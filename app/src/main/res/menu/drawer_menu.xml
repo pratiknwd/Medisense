@@ -14,5 +14,10 @@
         android:title="Profile" />
     <item
         android:id="@+id/nav_scan_report"
-        android:title="scan Report" />
+        android:title="Scan Report" />
+
+    <item
+        android:id="@+id/nav_my_reports"
+        android:title="My Reports" />
+
 </menu>
