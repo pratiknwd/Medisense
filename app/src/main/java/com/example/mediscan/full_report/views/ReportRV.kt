@@ -6,8 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mediscan.R
+import com.example.mediscan.db.entity.Report
 
 class ReportRV : RecyclerView.Adapter<ReportRV.ReportViewHolder>() {
+    private val reports: MutableList<Report> = mutableListOf()
+    
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportRV.ReportViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
             R.layout.item_test_result_card,
@@ -17,23 +20,46 @@ class ReportRV : RecyclerView.Adapter<ReportRV.ReportViewHolder>() {
         return ReportViewHolder(view)
     }
     
+    
+    /*
+    data class Report(
+    @PrimaryKey(autoGenerate = true)
+    val reportId: Int,
+    val userId: Int,  // Foreign Key
+    val reportTypeId: Int,  // Foreign Key
+    val testName: String?,
+    val testValue: Float?,
+    val unit: String?,
+    val upperLimit: Float?,
+    val lowerLimit: Float?,
+    val explanation: String?,
+    val bioReferenceInterval: String?,
+    * */
+    
     override fun onBindViewHolder(holder: ReportRV.ReportViewHolder, position: Int) {
         holder.apply {
-            subTestTV.text = position.toString()
-            currentValueTV.text = position.toString()
-            rangeTV.text = position.toString()
-            riskTV.text = position.toString()
-            recommendationTV.text = position.toString()
+            subTestTV.text = reports[position].testName
+            currentValueTV.text = reports[position].testValue.toString()
+            rangeTV.text = "${reports[position].lowerLimit} - ${reports[position].upperLimit}"
+            riskTV.text = "TODO: get indication from LLM"
+            recommendationTV.text = reports[position].explanation
         }
     }
     
     override fun getItemCount(): Int {
-        return 20
+        return reports.size
     }
     
     override fun getItemViewType(position: Int): Int {
         return super.getItemViewType(position)
     }
+    
+    fun addReport(report: List<Report>) {
+        reports.clear()
+        reports.addAll(report)
+        notifyDataSetChanged()
+    }
+    
     
     inner class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val indicator: View = itemView.findViewById(R.id.indicator)

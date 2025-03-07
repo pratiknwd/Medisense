@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -43,7 +44,7 @@ enum class P_STATES {
 }
 
 class SharedViewModel(private val applicationContext: Application) : AndroidViewModel(applicationContext) {
-    private val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, DATABASE_NAME).build()
+    private val db by lazy { AppDatabase.getDatabase(applicationContext) }
     private lateinit var tts: TextToSpeech
     private var generativeModel: GenerativeModel
     private val _prescription = MutableLiveData<P_STATES>()

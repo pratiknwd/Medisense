@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -35,6 +36,7 @@ import com.example.mediscan.db.entity.ReportType
 import com.example.mediscan.db.entity.User
 import com.example.mediscan.db.entity.UserFoodTiming
 import com.example.mediscan.full_report.views.FullReportFragment
+import com.example.mediscan.my_reports.MyReportsFragment
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -91,7 +93,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             binding.navView.setCheckedItem(R.id.nav_home)
         }
         
-        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, DATABASE_NAME).build()
+        db = AppDatabase.getDatabase(applicationContext)
         
         // Initialize DAOs
         userDao = db.userDao()
@@ -158,19 +160,21 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             R.id.nav_medicine -> loadFragment(supportFragmentManager, MedicineScanFragment.newInstance(), MedicineScanFragment.FRAG_NAME)
             R.id.nav_profile -> loadFragment(supportFragmentManager, ProfileFragment.newInstance(), ProfileFragment.FRAG_NAME)
             R.id.nav_scan_report -> loadFragment(supportFragmentManager, ScanReportFragment.newInstance(), ScanReportFragment.FRAG_NAME)
+            R.id.nav_my_reports -> loadFragment(supportFragmentManager, MyReportsFragment.newInstance(), MyReportsFragment.FRAG_NAME)
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
     
-    fun openFullReportFragment() {
-        val fragment = FullReportFragment.newInstance()
+    fun openFullReportFragment(reportTypeId: Int) {
+        val fragment = FullReportFragment.newInstance(reportTypeId)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.frag_container, fragment, FullReportFragment.FRAG_NAME)
             .addToBackStack(FullReportFragment.FRAG_NAME)
             .commit()
     }
+    
     
     fun loadFragment(fragmentManager: FragmentManager, fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
