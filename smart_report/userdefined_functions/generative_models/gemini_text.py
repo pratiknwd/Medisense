@@ -1,6 +1,6 @@
 import google.generativeai as genai
 
-def gemini_flash(prompt, temprature=0, top_p=1, top_k=1, max_tokens=8000):
+def gemini_text(prompt, temprature=0, top_p=1, top_k=1, max_tokens=8000):
     genai.configure(api_key="AIzaSyB5h_FCHGPN_Fp-egPHqqxKU4NfHf6eqgs")
     generation_config = {
     "temperature": temprature,

@@ -5,7 +5,7 @@ def image_fn(image_path):
     image = PIL.Image.open(image_path)
     return image
 
-def gemini_pro_vision(prompt, image_path, temprature=0, top_p=1, top_k=1, max_tokens=8000):
+def gemini_image(prompt, image_path, temprature=0, top_p=1, top_k=1, max_tokens=8000):
     genai.configure(api_key="AIzaSyB5h_FCHGPN_Fp-egPHqqxKU4NfHf6eqgs")
     image = image_fn(image_path)
     contents = [image, prompt]

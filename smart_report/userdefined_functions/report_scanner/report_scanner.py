@@ -1,7 +1,7 @@
 import re
 import json
-from ..generative_models.gemini_flash import gemini_flash
-from ..generative_models.gemini_pro_vision import gemini_pro_vision
+from ..generative_models.gemini_text import gemini_text
+from ..generative_models.gemini_image import gemini_image
 
 def StringtoJson(input_string):
     if input_string:
@@ -32,7 +32,7 @@ def report_scan(image_file):
     report:{image_file}
     </input>
     answer"""
-    return gemini_pro_vision(prompt, image_file)
+    return gemini_image(prompt, image_file)
 
 
 # def report_analyze(df):
