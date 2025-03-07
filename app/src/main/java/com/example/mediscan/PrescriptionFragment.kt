@@ -91,6 +91,7 @@ class PrescriptionFragment : BaseFragment() {
             sharedViewModel.getResponseForPrescription(bitmapFromUri, PRESCRIPTION_PROMPT)
         }
     }
+
     
     override fun onNavigationIconClick(iconTapped: View?) {
     

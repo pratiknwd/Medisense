@@ -161,6 +161,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             R.id.nav_pres -> loadFragment(supportFragmentManager, PrescriptionFragment.newInstance(), PrescriptionFragment.FRAG_NAME)
             R.id.nav_medicine -> loadFragment(supportFragmentManager, MedicineScanFragment.newInstance(), MedicineScanFragment.FRAG_NAME)
             R.id.nav_profile -> loadFragment(supportFragmentManager, ProfileFragment.newInstance(), ProfileFragment.FRAG_NAME)
+            R.id.nav_scan_report -> loadFragment(supportFragmentManager, ScanReportFragment.newInstance(),ScanReportFragment.FRAG_NAME)
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true

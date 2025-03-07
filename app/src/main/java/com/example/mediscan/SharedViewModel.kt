@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.mediscan.prescription.PrescriptionModel
 import com.example.mediscan.prescription.PrescriptionModelItem
+import com.example.mediscan.report.ReportModel
+import com.example.mediscan.report.ReportModelItem
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.ai.client.generativeai.type.generationConfig
@@ -38,6 +40,10 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
     private val _prescription = MutableLiveData<P_STATES>()
     val prescription: LiveData<P_STATES> get() = _prescription
     var prescriptionModel: MutableList<PrescriptionModelItem> = mutableListOf()
+
+    private val _report = MutableLiveData<P_STATES>()
+    private val report: LiveData<P_STATES> get() = _report
+    var reportModel: MutableList<ReportModelItem> = mutableListOf()
     
     init {
         val generationConfig = generationConfig {
@@ -86,7 +92,16 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             callback(response)
         }
     }
-    
+
+    fun getResponseForReport(bitmap: Bitmap, prompt: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            _report.postValue(P_STATES.LOADING) // Update state for UI
+            val response = getResponseFromGemini(bitmap, prompt) // Get response from Gemini
+            getReport(response) // Process the response
+        }
+    }
+
+
     private suspend fun getResponseFromGemini(bitmap: Bitmap, prompt: String): String? {
         try {
             val inputContent: com.google.ai.client.generativeai.type.Content = content {
@@ -118,7 +133,7 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
         }
         super.onCleared()
     }
-    
+
     private fun getPrescription(json: String?) {
         val trimmedJson = trimJson(json)
         val model: PrescriptionModel? = formatJsonForPrescription(trimmedJson)
@@ -135,7 +150,24 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
         prescriptionModel.addAll(modelList)
         _prescription.postValue(P_STATES.NOT_EMPTY)
     }
-    
+
+    private fun getReport(json: String?) {
+        val trimmedJson = trimJson(json)
+        val model: ReportModel? = formatJsonForReport(trimmedJson) // Convert JSON to ReportModel
+        if (model == null) {
+            _report.postValue(P_STATES.ERROR)
+            return
+        }
+        val modelList: List<ReportModelItem> = model.toList() // Convert to list
+        if (modelList.isEmpty()) {
+            _report.postValue(P_STATES.EMPTY)
+            return
+        }
+        reportModel.clear()
+        reportModel.addAll(modelList)
+        _report.postValue(P_STATES.NOT_EMPTY)
+    }
+
     private fun trimJson(json: String?): String? {
         json ?: return null
         var trim = json.trim().trimIndent()
@@ -153,6 +185,15 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             }
         } catch (e: JsonSyntaxException) {
             Log.e("9155881234", "Error parsing JSON: ${e.message}")
+            null
+        }
+    }
+
+    private fun formatJsonForReport(json: String?): ReportModel? {
+        return try {
+            Gson().fromJson(json, ReportModel::class.java)
+        } catch (e: Exception) {
+            Log.e("JSON_PARSE", "Error parsing report JSON: ${e.message}")
             null
         }
     }
