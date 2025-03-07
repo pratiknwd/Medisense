@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 
 data class AuthResult(val success: Boolean, val message: String)
 
-class AuthRepository(context: Context) {
+class AuthRepository(private val context: Context) {
     private val userDao: UserDao = AppDatabase.getDatabase(context).userDao()
     
     suspend fun signUp(username: String, age: Int, gender: String, email: String, password: String): AuthResult {
@@ -29,10 +29,19 @@ class AuthRepository(context: Context) {
         return withContext(Dispatchers.IO) {
             val user = userDao.getUserByEmail(email)
             if (user != null && user.password == password) {
+                saveUserIdInPreferences(user.userId)
                 AuthResult(true, "Login successful")
             } else {
                 AuthResult(false, "Invalid email or password")
             }
+        }
+    }
+    
+    private fun saveUserIdInPreferences(userId: Int) {
+        val sharedPref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putInt(PEF_USER_ID, userId)
+            apply()
         }
     }
 }

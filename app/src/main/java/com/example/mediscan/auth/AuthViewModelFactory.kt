@@ -1,8 +1,7 @@
-package com.example.mediscan.signIn_signUp
+package com.example.mediscan.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.mediscan.auth.AuthRepository
 import com.example.mediscan.viewmodel.AuthViewModel
 
 

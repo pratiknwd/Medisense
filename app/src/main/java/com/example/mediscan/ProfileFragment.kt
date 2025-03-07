@@ -27,6 +27,7 @@ class ProfileFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.seeReportButton.setOnClickListener { (requireActivity() as MainActivity).openFullReportFragment() }
+        binding.logoutUser.setOnClickListener { (requireActivity() as MainActivity).logoutUser(requireContext()) }
     }
     
     override fun onResume() {

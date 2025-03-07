@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mediscan.databinding.ActivitySignUpBinding
-import com.example.mediscan.signIn_signUp.AuthViewModelFactory
 import com.example.mediscan.viewmodel.AuthViewModel
 
 class SignUpActivity : AppCompatActivity() {
@@ -33,7 +32,6 @@ class SignUpActivity : AppCompatActivity() {
         }
         
         binding.tvSignIn.setOnClickListener {
-            startActivity(Intent(this, SignInActivity::class.java))
             finish()
         }
     }
