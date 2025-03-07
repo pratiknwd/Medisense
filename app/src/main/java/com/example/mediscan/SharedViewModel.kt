@@ -100,7 +100,17 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             return null
         }
     }
-    
+
+    suspend fun getResponseFromGemini(query: String): String? {
+        return try {
+            val response = generativeModel.generateContent(query)
+            response.text ?: "No response received"
+        } catch (e: Exception) {
+            "Error: ${e.message}"
+        }
+    }
+
+
     override fun onCleared() {
         if (::tts.isInitialized) {
             tts.stop()
@@ -146,4 +156,13 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             null
         }
     }
+
+    fun getResponseForQuery(query: String, callback: (String?) -> Unit) {
+        CoroutineScope(Dispatchers.Main).launch {
+            _prescription.postValue(P_STATES.LOADING) // Show loading state if needed
+            val response = getResponseFromGemini(query) // Call Gemini API
+            callback(response) // Send result back to UI
+        }
+    }
+
 }

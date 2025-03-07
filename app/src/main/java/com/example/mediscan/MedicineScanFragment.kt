@@ -1,15 +1,20 @@
 package com.example.mediscan
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.example.mediscan.databinding.FragmentMedicineScanBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 private const val MEDICINE_URI = "medicine_uri"
@@ -58,8 +63,96 @@ class MedicineScanFragment : BaseFragment() {
         binding.startTTS.setOnClickListener { response?.let { it1 -> viewModel.startSpeech(it1) } }
         binding.stopTTS.setOnClickListener { viewModel.stopSpeech() }
         binding.chooseImageBtn.setOnClickListener { pickImageLauncher.launch("image/*") }
+        binding.etQuery.setOnClickListener {
+            if (binding.textView.text.isNullOrBlank()) {
+                Toast.makeText(requireContext(), "No medicine detected!", Toast.LENGTH_SHORT).show()
+            } else {
+                showBottomSheet() // Show button options instead of opening the keyboard
+            }
+        }
+
     }
-    
+
+    private fun showBottomSheet() {
+        val bottomSheet = BottomSheetDialog(requireContext())
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_query, null)
+        bottomSheet.setContentView(view)
+
+        val btnDosage = view.findViewById<Button>(R.id.btnMedicineUsage)
+        val btnSideEffects = view.findViewById<Button>(R.id.btnSideEffects)
+        val btnAlternatives = view.findViewById<Button>(R.id.btnClose) // Corrected ID
+        val btnAskAnything = view.findViewById<Button>(R.id.btnAskAnything) // Custom query button
+
+        btnDosage.setOnClickListener {
+            binding.etQuery.requestFocus()
+
+            sendQueryToLLM("Tell me the dosage of ${binding.textView.text}")
+            bottomSheet.dismiss()
+            closeKeyboard(btnDosage, requireContext())
+        }
+
+        btnSideEffects.setOnClickListener {
+            binding.etQuery.requestFocus()
+            sendQueryToLLM("What are the side effects of ${binding.textView.text}?")
+            bottomSheet.dismiss()
+            closeKeyboard(btnSideEffects, requireContext())
+        }
+
+        btnAlternatives.setOnClickListener {
+            binding.etQuery.requestFocus()
+            sendQueryToLLM("Suggest alternatives for ${binding.textView.text}")
+            bottomSheet.dismiss()
+            closeKeyboard(binding.etQuery, requireContext())
+        }
+
+        // Open keyboard for user input when "Ask Anything" is clicked
+        btnAskAnything.setOnClickListener {
+            bottomSheet.dismiss() // Close the bottom sheet first
+
+            // Ensure EditText is focusable
+            binding.etQuery.isFocusableInTouchMode = true
+            binding.etQuery.requestFocus()
+            openKeyboard(binding.etQuery, requireContext())
+
+
+            // Open keyboard
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(binding.etQuery, InputMethodManager.SHOW_IMPLICIT)
+        }
+
+        bottomSheet.show()
+    }
+
+    fun openKeyboard(view: View, context: Context) {
+        view.isFocusableInTouchMode = true
+        view.requestFocus()
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    fun closeKeyboard(view: View, context: Context) {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+
+
+
+    private fun sendQueryToLLM(query: String) {
+        binding.llm.text = "Getting information for You" // Show loading message
+        val adjustedQuery = "$query. Provide a concise response (within 50 words) and avoid unnecessary details."
+
+        viewModel.getResponseForQuery(adjustedQuery) { response ->
+            if (!response.isNullOrBlank()) {
+                binding.llm.text = response // Update UI with LLM response
+            } else {
+                binding.llm.text = "No Available Response."
+            }
+        }
+    }
+
+
+
     override fun onResume() {
         super.onResume()
         initToolbar((activity as MainActivity).toolbar, FRAG_NAME)
