@@ -74,3 +74,174 @@ first step use firebase to upload images
 check feasibility of pdf generation
 
 checking
+
+
+
+```json
+[
+  {
+    "test_name": "Creatinine (Jaffe Compensated)",
+    "test_value": 5.17,
+    "units": "mg/dL",
+    "bio reference interval": "<1.20",
+    "minimum_value": null,
+    "maximum_value": 1.20,
+    "explanation": "Creatinine is a waste product produced by muscle metabolism.  A high level may indicate kidney damage or disease.  This result is significantly above the reference range, suggesting potential kidney impairment. Further investigation is warranted."
+  },
+  {
+    "test_name": "GFR Estimated",
+    "test_value": 13,
+    "units": "mL/min/1.73m2",
+    "bio reference interval": ">59",
+    "minimum_value": 59,
+    "maximum_value": null,
+    "explanation": "Glomerular filtration rate (GFR) estimates how well the kidneys are filtering waste from the blood.  A GFR of 13 is severely reduced, indicating significant kidney dysfunction. This correlates with the elevated creatinine."
+  },
+  {
+    "test_name": "GFR Category",
+    "test_value": "G5",
+    "units": null,
+    "bio reference interval": null,
+    "minimum_value": null,
+    "maximum_value": null,
+    "explanation": "This is a categorical classification of GFR, indicating severe kidney disease (Stage 5 Chronic Kidney Disease)."
+  },
+  {
+    "test_name": "Urea (Urease UV)",
+    "test_value": 81.00,
+    "units": "mg/dL",
+    "bio reference interval": "19.00-44.00",
+    "minimum_value": 19.00,
+    "maximum_value": 44.00,
+    "explanation": "Urea is another waste product filtered by the kidneys.  The elevated level further supports the diagnosis of kidney impairment."
+  },
+  {
+    "test_name": "Urea Nitrogen Blood",
+    "test_value": 37.83,
+    "units": "mg/dL",
+    "bio reference interval": "8.90-20.60",
+    "minimum_value": 8.90,
+    "maximum_value": 20.60,
+    "explanation": "Similar to urea, this is another indicator of kidney function.  The high value confirms significant kidney problems."
+  },
+  {
+    "test_name": "BUN/Creatinine Ratio",
+    "test_value": 7,
+    "units": null,
+    "bio reference interval": null,
+    "minimum_value": null,
+    "maximum_value": null,
+    "explanation": "This ratio helps assess kidney function. While a specific reference range isn't provided, a high ratio can indicate pre-renal azotemia (reduced blood flow to the kidneys) or other kidney issues."
+  },
+  {
+    "test_name": "Uric Acid (Enzymatic Colorimetric)",
+    "test_value": 3.80,
+    "units": "mg/dL",
+    "bio reference interval": "3.4-7.0",
+    "minimum_value": 3.4,
+    "maximum_value": 7.0,
+    "explanation": "Uric acid is a waste product of purine metabolism.  The level is within the reference range, suggesting no significant issue with uric acid metabolism."
+  },
+  {
+    "test_name": "AST (SGOT) (IFCC without P5P)",
+    "test_value": 20.0,
+    "units": "U/L",
+    "bio reference interval": "<40",
+    "minimum_value": null,
+    "maximum_value": 40,
+    "explanation": "Aspartate aminotransferase (AST) is an enzyme found in the liver and other tissues.  Slightly elevated levels can indicate liver damage, but further investigation is needed to determine the cause."
+  },
+  {
+    "test_name": "ALT (SGPT) (IFCC without P5P)",
+    "test_value": 18.0,
+    "units": "U/L",
+    "bio reference interval": "<41",
+    "minimum_value": null,
+    "maximum_value": 41,
+    "explanation": "Alanine aminotransferase (ALT) is primarily found in the liver.  The slightly elevated level, along with the AST, warrants further investigation to rule out liver involvement."
+  },
+  {
+    "test_name": "GGTP (IFCC)",
+    "test_value": 22.0,
+    "units": "U/L",
+    "bio reference interval": "<71.00",
+    "minimum_value": null,
+    "maximum_value": 71.00,
+    "explanation": "Gamma-glutamyl transferase (GGT) is an enzyme found in the liver and other tissues.  A slightly elevated level can indicate liver damage or alcohol consumption."
+  },
+  {
+    "test_name": "Alkaline Phosphatase (ALP) (IFCC)",
+    "test_value": 182.00,
+    "units": "U/L",
+    "bio reference interval": "<128",
+    "minimum_value": null,
+    "maximum_value": 128,
+    "explanation": "Alkaline phosphatase is an enzyme found in the liver, bones, and other tissues.  This significantly elevated level strongly suggests liver or bone disease.  Further investigation is crucial."
+  },
+  {
+    "test_name": "Bilirubin Total (Diazo)",
+    "test_value": 0.34,
+    "units": "mg/dL",
+    "bio reference interval": "<1.10",
+    "minimum_value": null,
+    "maximum_value": 1.10,
+    "explanation": "Bilirubin is a byproduct of heme breakdown.  The level is within the normal range, suggesting no significant liver dysfunction related to bilirubin metabolism."
+  },
+  {
+    "test_name": "Bilirubin Direct (Diazo)",
+    "test_value": 0.16,
+    "units": "mg/dL",
+    "bio reference interval": "<0.20",
+    "minimum_value": null,
+    "maximum_value": 0.20,
+    "explanation": "Direct bilirubin is the conjugated form of bilirubin.  The level is within the normal range."
+  },
+  {
+    "test_name": "Bilirubin Indirect (Calculated)",
+    "test_value": 0.18,
+    "units": "mg/dL",
+    "bio reference interval": "<1.10",
+    "minimum_value": null,
+    "maximum_value": 1.10,
+    "explanation": "Indirect bilirubin is the unconjugated form.  The level is within the normal range."
+  },
+  {
+    "test_name": "Total Protein (Biuret)",
+    "test_value": 6.46,
+    "units": "g/dL",
+    "bio reference interval": "6.40-8.30",
+    "minimum_value": 6.40,
+    "maximum_value": 8.30,
+    "explanation": "Total protein measures the overall protein levels in the blood.  The level is within the normal range."
+  },
+  {
+    "test_name": "Albumin (BCG)",
+    "test_value": 3.83,
+    "units": "g/dL",
+    "bio reference interval": "3.97-4.94",
+    "minimum_value": 3.97,
+    "maximum_value": 4.94,
+    "explanation": "Albumin is a major protein in the blood.  The level is slightly below the reference range, which may indicate underlying issues, especially considering the kidney function results."
+  },
+  {
+    "test_name": "A : G Ratio (Calculated)",
+    "test_value": 1.46,
+    "units": null,
+    "bio reference interval": "0.90-2.00",
+    "minimum_value": 0.90,
+    "maximum_value": 2.00,
+    "explanation": "This ratio compares albumin to globulin levels.  The value is within the normal range."
+  },
+  {
+    "test_name": "Globulin (Calculated)",
+    "test_value": 2.63,
+    "units": "gm/dL",
+    "bio reference interval": "2.0-3.5",
+    "minimum_value": 2.0,
+    "maximum_value": 3.5,
+    "explanation": "Globulin represents a group of proteins in the blood.  The level is within the normal range."
+  }
+]
+```
+
+

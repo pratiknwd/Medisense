@@ -10,7 +10,7 @@ import com.example.mediscan.db.entity.ReportType
 @Dao
 interface ReportTypeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertReportType(reportType: ReportType)
+    suspend fun insertReportType(reportType: ReportType): Long
 
     @Query("SELECT * FROM ReportType WHERE userId = :userId")
     suspend fun getReportTypesByUser(userId: Int): List<ReportType>

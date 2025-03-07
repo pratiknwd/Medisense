@@ -1,12 +1,20 @@
 package com.example.mediscan
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import androidx.room.Room
+import com.example.mediscan.auth.PEF_USER_ID
+import com.example.mediscan.auth.SHARED_PREF_NAME
+import com.example.mediscan.db.AppDatabase
+import com.example.mediscan.db.AppDatabase.Companion.DATABASE_NAME
+import com.example.mediscan.db.entity.ReportType
 import com.example.mediscan.prescription.PrescriptionModel
 import com.example.mediscan.prescription.PrescriptionModelItem
 import com.example.mediscan.report.ReportModel
@@ -34,15 +42,16 @@ enum class P_STATES {
     NOT_EMPTY
 }
 
-class SharedViewModel(applicationContext: Application) : AndroidViewModel(applicationContext) {
+class SharedViewModel(private val applicationContext: Application) : AndroidViewModel(applicationContext) {
+    private val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, DATABASE_NAME).build()
     private lateinit var tts: TextToSpeech
     private var generativeModel: GenerativeModel
     private val _prescription = MutableLiveData<P_STATES>()
     val prescription: LiveData<P_STATES> get() = _prescription
     var prescriptionModel: MutableList<PrescriptionModelItem> = mutableListOf()
-
+    
     private val _report = MutableLiveData<P_STATES>()
-    private val report: LiveData<P_STATES> get() = _report
+    val report: LiveData<P_STATES> get() = _report
     var reportModel: MutableList<ReportModelItem> = mutableListOf()
     
     init {
@@ -92,7 +101,7 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             callback(response)
         }
     }
-
+    
     fun getResponseForReport(bitmap: Bitmap, prompt: String) {
         CoroutineScope(Dispatchers.Main).launch {
             _report.postValue(P_STATES.LOADING) // Update state for UI
@@ -100,8 +109,8 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             getReport(response) // Process the response
         }
     }
-
-
+    
+    
     private suspend fun getResponseFromGemini(bitmap: Bitmap, prompt: String): String? {
         try {
             val inputContent: com.google.ai.client.generativeai.type.Content = content {
@@ -115,7 +124,7 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             return null
         }
     }
-
+    
     suspend fun getResponseFromGemini(query: String): String? {
         return try {
             val response = generativeModel.generateContent(query)
@@ -124,8 +133,8 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             "Error: ${e.message}"
         }
     }
-
-
+    
+    
     override fun onCleared() {
         if (::tts.isInitialized) {
             tts.stop()
@@ -133,7 +142,7 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
         }
         super.onCleared()
     }
-
+    
     private fun getPrescription(json: String?) {
         val trimmedJson = trimJson(json)
         val model: PrescriptionModel? = formatJsonForPrescription(trimmedJson)
@@ -150,10 +159,11 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
         prescriptionModel.addAll(modelList)
         _prescription.postValue(P_STATES.NOT_EMPTY)
     }
-
+    
     private fun getReport(json: String?) {
         val trimmedJson = trimJson(json)
         val model: ReportModel? = formatJsonForReport(trimmedJson) // Convert JSON to ReportModel
+        
         if (model == null) {
             _report.postValue(P_STATES.ERROR)
             return
@@ -165,14 +175,17 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
         }
         reportModel.clear()
         reportModel.addAll(modelList)
+        insertReportData()
         _report.postValue(P_STATES.NOT_EMPTY)
     }
-
+    
     private fun trimJson(json: String?): String? {
         json ?: return null
-        var trim = json.trim().trimIndent()
-        trim = trim.substring(7, trim.length - 3)
-        return trim
+        return json.trim()
+            .removePrefix("```json") // Remove the starting ```json
+            .removePrefix("```") // In case there's just ```
+            .removeSuffix("```") // Remove the ending ```
+            .trim() // Trim extra spaces after removal
     }
     
     private fun formatJsonForPrescription(json: String?): PrescriptionModel? {
@@ -188,16 +201,21 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             null
         }
     }
-
+    
     private fun formatJsonForReport(json: String?): ReportModel? {
         return try {
-            Gson().fromJson(json, ReportModel::class.java)
-        } catch (e: Exception) {
-            Log.e("JSON_PARSE", "Error parsing report JSON: ${e.message}")
+            if (json.isNullOrBlank()) {
+                Log.e("9155881234", "JSON is null or empty")
+                null
+            } else {
+                Gson().fromJson(json, ReportModel::class.java)
+            }
+        } catch (e: JsonSyntaxException) {
+            Log.e("9155881234", "Error parsing JSON: ${e.message}")
             null
         }
     }
-
+    
     fun getResponseForQuery(query: String, callback: (String?) -> Unit) {
         CoroutineScope(Dispatchers.Main).launch {
             _prescription.postValue(P_STATES.LOADING) // Show loading state if needed
@@ -205,5 +223,22 @@ class SharedViewModel(applicationContext: Application) : AndroidViewModel(applic
             callback(response) // Send result back to UI
         }
     }
-
+    
+    private fun getUserId(context: Context): Int {
+        val sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getInt(PEF_USER_ID, -1)  // Default value -1 if not found
+    }
+    
+    private fun insertReportData() {
+        viewModelScope.launch {
+            val userId = getUserId(applicationContext)
+            val reportTypeDao = db.reportTypeDao()
+            //todo: get 'reportTypeName' from image uploaded by user using LLM
+            val reportType = ReportType(userId = userId, reportTypeName = "Blood Test")
+            val reportTypeId = reportTypeDao.insertReportType(reportType)
+            val toEntity = reportModel.mapNotNull { it.toEntity(userId, reportTypeId.toInt()) }
+            val reportDao = db.reportDao()
+            reportDao.insertAllReports(toEntity)
+        }
+    }
 }

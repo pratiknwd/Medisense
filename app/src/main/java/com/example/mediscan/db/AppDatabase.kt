@@ -34,6 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun reportTypeDao(): ReportTypeDao
 
     companion object {
+        val DATABASE_NAME = "app_database"
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -42,7 +43,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "app_database"
+                    DATABASE_NAME
                 ).build()
                 INSTANCE = instance
                 instance

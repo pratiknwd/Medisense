@@ -10,7 +10,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.example.mediscan.databinding.ActivityScanReportBinding
+import com.example.mediscan.db.dao.ReportDao
 import com.example.mediscan.prescription.PrescriptionModelItem
+import com.example.mediscan.report.ReportModelItem
 
 private const val REPORT_PROMPT: String = """You are Senior Doctor and an expert in analyzing health reports.
     The question is delimited by <input> and </input>. Your task is to generate a response in json with
@@ -32,15 +34,17 @@ class ScanReportFragment : BaseFragment(){
     private val binding get() = _binding!!
     private var uri: Uri? = null
     private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var dao: ReportDao
 
 
     private val pickImageLauncher: ActivityResultLauncher<String> = registerForActivityResult(
         ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
+            Log.d("9155881234", "pickImageLauncher")
             this.uri = it
             val bitmapFromUri = ImageUtil.getBitmapFromUri(requireContext(), it)
             binding.imageView.setImageBitmap(bitmapFromUri)
-            sharedViewModel.getResponseForPrescription(bitmapFromUri, REPORT_PROMPT)
+            sharedViewModel.getResponseForReport(bitmapFromUri, REPORT_PROMPT)
         }
     }
 
@@ -62,20 +66,25 @@ class ScanReportFragment : BaseFragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedViewModel.prescription.observe(viewLifecycleOwner) {
+        sharedViewModel.report.observe(viewLifecycleOwner) {
             it ?: return@observe
-            binding.prescriptionTextView.text = when (it) {
+            Log.d("9155881234", "frag = $FRAG_NAME, state = $it")
+            binding.reportTextView.text = when (it) {
                 P_STATES.LOADING -> "Loading"
-                P_STATES.ERROR -> "Could not identify prescription. Please upload a prescription image."
+                P_STATES.ERROR -> "Could not identify report. Please upload a report image."
                 P_STATES.EMPTY -> "Empty"
-                P_STATES.NOT_EMPTY -> getFormattedPrescription(sharedViewModel.prescriptionModel)
+                P_STATES.NOT_EMPTY -> {
+                    
+                    getFormattedReport(sharedViewModel.reportModel)
+                }
             }
         }
 
         binding.chooseReportBtn.setOnClickListener { pickImageLauncher.launch("image/*") }
     }
-
-    private fun getFormattedPrescription(list: List<PrescriptionModelItem>): String {
+    
+    
+    private fun getFormattedReport(list: List<ReportModelItem>): String {
         val sb = StringBuilder()
         list.forEach {
             sb.append(it.toString()).append("\n\n")
@@ -99,9 +108,9 @@ class ScanReportFragment : BaseFragment(){
     }
 
     companion object {
-        const val FRAG_NAME = "Prescription"
+        const val FRAG_NAME = "ScanReport"
 
         @JvmStatic
-        fun newInstance() = PrescriptionFragment()
+        fun newInstance() = ScanReportFragment()
     }
 }
