@@ -42,7 +42,7 @@ class SignUpActivity : AppCompatActivity() {
             val username = binding.userName.text.toString()
             val age = binding.userAge.text.toString().toInt()
             val gender = binding.userGender.text.toString()
-            val email = binding.etEmail.text.toString()
+            val email = binding.etEmail.text.toString().lowercase()
             val password = binding.etPassword.text.toString()
             val confirmPassword = binding.etConfirmPassword.text.toString()
             

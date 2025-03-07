@@ -23,7 +23,8 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Document(
-    @PrimaryKey(autoGenerate = true) val documentId: Int,
+    @PrimaryKey(autoGenerate = true)
+    val documentId: Int,
     val userId: Int,  // Foreign Key
     val documentTypeId: Int,  // Foreign Key
     val documentLink: String

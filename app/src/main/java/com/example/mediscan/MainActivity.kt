@@ -19,6 +19,7 @@ import com.example.mediscan.auth.SHARED_PREF_NAME
 import com.example.mediscan.auth.SignInActivity
 import com.example.mediscan.databinding.ActivityMainBinding
 import com.example.mediscan.db.AppDatabase
+import com.example.mediscan.db.AppDatabase.Companion.DATABASE_NAME
 import com.example.mediscan.db.dao.DocumentDao
 import com.example.mediscan.db.dao.DocumentTypeDao
 import com.example.mediscan.db.dao.MedicinePlanDao
@@ -90,8 +91,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             binding.navView.setCheckedItem(R.id.nav_home)
         }
         
-        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app_database")
-            .build()
+        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, DATABASE_NAME).build()
         
         // Initialize DAOs
         userDao = db.userDao()
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         reportTypeDao = db.reportTypeDao()
         
         // Insert dummy data
-        insertDummyData()
+        // insertDummyData()
         
         // Retrieve dummy data
         lifecycleScope.launch(Dispatchers.IO) {
@@ -139,21 +139,17 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             userFoodTimingDao.insertUserFoodTiming(userFoodTiming)
             
             // 6️⃣ Insert Report Type First (Before Report)
-            val reportType = ReportType(reportTypeId = 1, userId = 1, documentId = 1, reportTypeName = "Blood Test")
-            reportTypeDao.insertReportType(reportType)
+            /*val reportType = ReportType(reportTypeId = 1, userId = 1, documentId = 1, reportTypeName = "Blood Test")
+            reportTypeDao.insertReportType(reportType)*/
             
-            // 7️⃣ Insert Report After Ensuring User and Document Exist
+            /*// 7️⃣ Insert Report After Ensuring User and Document Exist
             val report = Report(reportId = 1, userId = 1, documentId = 1, reportTypeId = 1, testName = "Blood Sugar", result = 90, unit = "mg/dL", upperLimit = 140, lowerLimit = 70)
-            reportDao.insertReport(report)
+            reportDao.insertReport(report)*/
             
             println("✅ Dummy data inserted successfully!")
         }
     }
     
-    override fun onResume() {
-        super.onResume()
-        
-    }
     
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -161,6 +157,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             R.id.nav_pres -> loadFragment(supportFragmentManager, PrescriptionFragment.newInstance(), PrescriptionFragment.FRAG_NAME)
             R.id.nav_medicine -> loadFragment(supportFragmentManager, MedicineScanFragment.newInstance(), MedicineScanFragment.FRAG_NAME)
             R.id.nav_profile -> loadFragment(supportFragmentManager, ProfileFragment.newInstance(), ProfileFragment.FRAG_NAME)
+            R.id.nav_scan_report -> loadFragment(supportFragmentManager, ScanReportFragment.newInstance(), ScanReportFragment.FRAG_NAME)
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true

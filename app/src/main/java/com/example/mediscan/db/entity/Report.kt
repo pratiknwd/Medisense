@@ -13,12 +13,12 @@ import androidx.room.PrimaryKey
             childColumns = ["userId"],
             onDelete = ForeignKey.CASCADE
         ),
-        ForeignKey(
+        /*ForeignKey(
             entity = Document::class,
             parentColumns = ["documentId"],
             childColumns = ["documentId"],
             onDelete = ForeignKey.CASCADE
-        ),
+        ),*/
         ForeignKey(
             entity = ReportType::class,
             parentColumns = ["reportTypeId"],
@@ -28,13 +28,16 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Report(
-    @PrimaryKey(autoGenerate = true) val reportId: Int,
+    @PrimaryKey(autoGenerate = true)
+    val reportId: Int,
     val userId: Int,  // Foreign Key
-    val documentId: Int,  // Foreign Key
+//    val documentId: Int?,  // Foreign Key
     val reportTypeId: Int,  // Foreign Key
-    val testName: String,
-    val result: Int,
-    val unit: String,
-    val upperLimit: Int,
-    val lowerLimit: Int
+    val testName: String?,
+    val testValue: Float?,
+    val unit: String?,
+    val upperLimit: Float?,
+    val lowerLimit: Float?,
+    val explanation: String?,
+    val bioReferenceInterval: String?,
 )
