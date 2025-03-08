@@ -5,16 +5,15 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
 import com.example.mediscan.auth.PEF_USER_ID
 import com.example.mediscan.auth.SHARED_PREF_NAME
 import com.example.mediscan.db.AppDatabase
-import com.example.mediscan.db.AppDatabase.Companion.DATABASE_NAME
+import com.example.mediscan.db.entity.MedicineDetails
+import com.example.mediscan.db.entity.MedicinePlan
 import com.example.mediscan.db.entity.ReportType
 import com.example.mediscan.prescription.PrescriptionModel
 import com.example.mediscan.prescription.PrescriptionModelItem
@@ -28,6 +27,9 @@ import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 private const val API_KEY = "AIzaSyB5h_FCHGPN_Fp-egPHqqxKU4NfHf6eqgs"
@@ -158,9 +160,12 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
         }
         prescriptionModel.clear()
         prescriptionModel.addAll(modelList)
+        Log.d("PrescriptionState", "Prescription state updated: ${modelList}")
+        viewModelScope.launch { insertPresciptionData(modelList)}
         _prescription.postValue(P_STATES.NOT_EMPTY)
+
     }
-    
+
     private fun getReport(json: String?) {
         val trimmedJson = trimJson(json)
         val model: ReportModel? = formatJsonForReport(trimmedJson) // Convert JSON to ReportModel
@@ -242,4 +247,48 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
             reportDao.insertAllReports(toEntity)
         }
     }
+
+    private suspend fun insertPresciptionData(modelList: List<PrescriptionModelItem>) {
+        val userId = getUserId(applicationContext) // Fetch user ID
+        val startDate = formatDate(Date()) // Get current date as String
+
+        // Get maximum duration (convert "14 days" -> 14)
+        val maxDuration = modelList.maxOfOrNull { it.duration.replace(" days", "").toIntOrNull() ?: 0 } ?: 0
+        val endDate = Calendar.getInstance().apply {
+            time = Date()
+            add(Calendar.DAY_OF_YEAR, maxDuration)
+        }.time
+        val endDateString = formatDate(endDate)
+
+
+        val medicinePlan = MedicinePlan(
+            userId = userId,
+            status = "Active",
+            startDate = startDate,
+            endDate = endDateString
+        )
+
+        val planId = db.medicinePlanDao().insertMedicinePlan(medicinePlan) // Insert & get planId
+
+        // Insert MedicineDetails
+        val medicineDetailsList = modelList.map {
+            MedicineDetails(
+                planId = planId.toInt(),
+                medicineName = it.medicineName,
+                dose = it.dose,
+                frequency = it.frequency,
+                duration = it.duration.replace(" days", "").toIntOrNull() ?: 0,
+                foodInstruction = it.foodInstruction,
+                times = it.times.toString()
+            )
+        }
+
+        db.medicineDetailsDao().insertMedicineDetailsList(medicineDetailsList)
+    }
+
+    private fun formatDate(date: Date): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return sdf.format(date)
+    }
+
 }

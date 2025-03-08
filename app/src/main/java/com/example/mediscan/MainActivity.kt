@@ -8,19 +8,16 @@ import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
 import com.example.mediscan.auth.PEF_USER_ID
 import com.example.mediscan.auth.SHARED_PREF_NAME
 import com.example.mediscan.auth.SignInActivity
 import com.example.mediscan.databinding.ActivityMainBinding
 import com.example.mediscan.db.AppDatabase
-import com.example.mediscan.db.AppDatabase.Companion.DATABASE_NAME
 import com.example.mediscan.db.dao.DocumentDao
 import com.example.mediscan.db.dao.DocumentTypeDao
 import com.example.mediscan.db.dao.MedicinePlanDao
@@ -30,9 +27,6 @@ import com.example.mediscan.db.dao.UserDao
 import com.example.mediscan.db.dao.UserFoodTimingDao
 import com.example.mediscan.db.entity.Document
 import com.example.mediscan.db.entity.DocumentType
-import com.example.mediscan.db.entity.MedicinePlan
-import com.example.mediscan.db.entity.Report
-import com.example.mediscan.db.entity.ReportType
 import com.example.mediscan.db.entity.User
 import com.example.mediscan.db.entity.UserFoodTiming
 import com.example.mediscan.full_report.views.FullReportFragment
@@ -133,8 +127,8 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             documentDao.insertDocument(document)
             
             // 4️⃣ Insert Medicine Plan (Depends on User)
-            val medicinePlan = MedicinePlan(planId = 1, userId = 1, status = true, medicineName = "Paracetamol", dose = "500mg", frequency = "1-0-1", duration = "7 days", times = "Morning, Night", foodInstruction = "After food", startDate = "2025-03-07")
-            medicinePlanDao.insertMedicinePlan(medicinePlan)
+//            val medicinePlan = MedicinePlan(planId = 1, userId = 1, status = true, medicineName = "Paracetamol", dose = "500mg", frequency = "1-0-1", duration = "7 days", times = "Morning, Night", foodInstruction = "After food", startDate = "2025-03-07")
+//            medicinePlanDao.insertMedicinePlan(medicinePlan)
             
             // 5️⃣ Insert User Food Timing (Depends on User)
             val userFoodTiming = UserFoodTiming(itineraryId = 1, userId = 1, breakfastTime = "8:00 AM", lunchTime = "1:00 PM", dinnerTime = "8:00 PM")
