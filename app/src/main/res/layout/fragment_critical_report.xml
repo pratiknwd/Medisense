@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".report.my_reports.MyReportsFragment">
+    tools:context=".report.CriticalReportFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myReportsRV"
+        android:id="@+id/criticalReportRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_report_type" />
+        tools:listitem="@layout/item_test_result_card" />
 
 </LinearLayout>

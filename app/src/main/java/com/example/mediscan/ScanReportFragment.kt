@@ -34,7 +34,6 @@ class ScanReportFragment : BaseFragment(){
     private val binding get() = _binding!!
     private var uri: Uri? = null
     private lateinit var sharedViewModel: SharedViewModel
-    private lateinit var dao: ReportDao
 
 
     private val pickImageLauncher: ActivityResultLauncher<String> = registerForActivityResult(

@@ -1,4 +1,4 @@
-package com.example.mediscan.full_report.views
+package com.example.mediscan.report.full_report.views
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,10 +13,10 @@ import com.example.mediscan.MainActivity
 import com.example.mediscan.R
 import com.example.mediscan.db.AppDatabase
 import com.example.mediscan.db.dao.ReportDao
+import com.example.mediscan.report.REPORT_ID
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
-private const val FULL_REPORT_ID = "FULL_REPORT_ID"
 
 class FullReportFragment : BaseFragment() {
     private var reportTypeId by Delegates.notNull<Int>()
@@ -29,7 +29,7 @@ class FullReportFragment : BaseFragment() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        reportTypeId = requireArguments().getInt(FULL_REPORT_ID)
+        reportTypeId = requireArguments().getInt(REPORT_ID)
         reportDao = AppDatabase.getDatabase(requireContext().applicationContext).reportDao()
         fullReportAdapter = ReportRV()
     }
@@ -54,7 +54,6 @@ class FullReportFragment : BaseFragment() {
         super.onResume()
         initToolbar((activity as MainActivity).toolbar, "Full Report")
         
-        Toast.makeText(requireContext(), "reportTypeId = $reportTypeId", Toast.LENGTH_SHORT).show()
     }
     
     companion object {
@@ -63,7 +62,7 @@ class FullReportFragment : BaseFragment() {
         @JvmStatic
         fun newInstance(reportTypeId: Int) = FullReportFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(FULL_REPORT_ID, reportTypeId)
+                    putInt(REPORT_ID, reportTypeId)
                 }
             }
     }

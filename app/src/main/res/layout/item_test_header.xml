@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:orientation="vertical"
-    tools:context="com.example.mediscan.full_report.views.ReportRV">
+    tools:context="com.example.mediscan.report.full_report.views.ReportRV">
 
     <TextView
         android:id="@+id/panelName"
