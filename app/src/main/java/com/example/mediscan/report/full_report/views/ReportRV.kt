@@ -1,4 +1,4 @@
-package com.example.mediscan.full_report.views
+package com.example.mediscan.report.full_report.views
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,7 @@ import com.example.mediscan.db.entity.Report
 class ReportRV : RecyclerView.Adapter<ReportRV.ReportViewHolder>() {
     private val reports: MutableList<Report> = mutableListOf()
     
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportRV.ReportViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
             R.layout.item_test_result_card,
             parent,
@@ -36,10 +36,11 @@ class ReportRV : RecyclerView.Adapter<ReportRV.ReportViewHolder>() {
     val bioReferenceInterval: String?,
     * */
     
-    override fun onBindViewHolder(holder: ReportRV.ReportViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
         holder.apply {
             subTestTV.text = reports[position].testName
             currentValueTV.text = reports[position].testValue.toString()
+            valueUnit.text = reports[position].unit ?: ""
             rangeTV.text = "${reports[position].lowerLimit} - ${reports[position].upperLimit}"
             riskTV.text = "TODO: get indication from LLM"
             recommendationTV.text = reports[position].explanation
@@ -68,6 +69,7 @@ class ReportRV : RecyclerView.Adapter<ReportRV.ReportViewHolder>() {
         val rangeTV: TextView = itemView.findViewById(R.id.rangeTV)
         val riskTV: TextView = itemView.findViewById(R.id.riskTV)
         val recommendationTV: TextView = itemView.findViewById(R.id.recommendationTV)
+        val valueUnit: TextView = itemView.findViewById(R.id.valueUnit)
         
         /*init {
             riskTV.visibility = View.GONE
