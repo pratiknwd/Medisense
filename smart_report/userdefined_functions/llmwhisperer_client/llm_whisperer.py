@@ -1,6 +1,7 @@
+import sys
 from unstract.llmwhisperer.client import LLMWhispererClient, LLMWhispererClientException
 
-llmw = LLMWhispererClient(base_url="https://llmwhisperer-api.unstract.com/v1", api_key="2kxyaS_P-RvFrHSdAZlD2ZRAackOky3h6Hi5K6d-e5I")
+llmw = LLMWhispererClient(base_url="https://llmwhisperer-api.us-central.unstract.com", api_key="2kxyaS_P-RvFrHSdAZlD2ZRAackOky3h6Hi5K6d-e5I")
 
 def error_exit(error_message):
     print(error_message)
