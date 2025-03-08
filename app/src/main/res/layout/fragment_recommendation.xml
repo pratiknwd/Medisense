@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".report.my_reports.MyReportsFragment">
+    tools:context=".report.RecommendationFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myReportsRV"
+        android:id="@+id/recommendationRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_report_type" />
+
+        />
 
 </LinearLayout>

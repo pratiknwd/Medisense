@@ -1,4 +1,4 @@
-package com.example.mediscan.my_reports
+package com.example.mediscan.report.my_reports
 
 import android.view.LayoutInflater
 import android.view.View

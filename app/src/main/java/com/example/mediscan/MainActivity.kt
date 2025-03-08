@@ -29,8 +29,9 @@ import com.example.mediscan.db.entity.Document
 import com.example.mediscan.db.entity.DocumentType
 import com.example.mediscan.db.entity.User
 import com.example.mediscan.db.entity.UserFoodTiming
-import com.example.mediscan.full_report.views.FullReportFragment
-import com.example.mediscan.my_reports.MyReportsFragment
+import com.example.mediscan.report.SmartReportFragment
+import com.example.mediscan.report.full_report.views.FullReportFragment
+import com.example.mediscan.report.my_reports.MyReportsFragment
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -161,11 +162,11 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     }
     
     fun openFullReportFragment(reportTypeId: Int) {
-        val fragment = FullReportFragment.newInstance(reportTypeId)
+        val fragment = SmartReportFragment.newInstance(reportTypeId)
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.frag_container, fragment, FullReportFragment.FRAG_NAME)
-            .addToBackStack(FullReportFragment.FRAG_NAME)
+            .replace(R.id.frag_container, fragment, SmartReportFragment.FRAG_NAME)
+            .addToBackStack(SmartReportFragment.FRAG_NAME)
             .commit()
     }
     

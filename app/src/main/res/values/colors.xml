@@ -5,4 +5,6 @@
     <color name="common_divider">#D5D5D5</color>
     <color name="light_blue">#BEE2FF</color>
     <color name="blue">#D7FFFE</color>
+    <color name="critical">#B3021D</color>
+
 </resources>
