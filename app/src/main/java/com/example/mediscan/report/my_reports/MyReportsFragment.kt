@@ -32,7 +32,11 @@ class MyReportsFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         val db by lazy { AppDatabase.getDatabase(requireContext()) }
         reportTypeDao = db.reportTypeDao()
-        myReportsAdapter = MyReportsAdapter { reportTypeId -> (requireActivity() as MainActivity).openFullReportFragment(reportTypeId) }
+        myReportsAdapter = MyReportsAdapter { reportTypeId -> (requireActivity() as MainActivity).openFullReportFragment(reportTypeId)}
+    }
+    
+    fun onDownloadReportClick(reportTypeId: Int) {
+    
     }
     
     private fun getUserId(context: Context): Int {

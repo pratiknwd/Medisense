@@ -102,4 +102,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
+//    implementation 'com.itextpdf.android:kernel-android:7.1.15'
+//    implementation 'com.itextpdf:itext7-core:7.1.15'
+    implementation 'com.itextpdf:kernel:7.1.15'
+    implementation 'com.itextpdf:layout:7.1.15'
+
 }
