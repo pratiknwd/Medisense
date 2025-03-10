@@ -6,5 +6,8 @@
     <color name="light_blue">#BEE2FF</color>
     <color name="blue">#D7FFFE</color>
     <color name="critical">#B3021D</color>
+    <color name="signIn">#229AF0</color>
+    <color name="signBackground">#229AF0</color>
+    <color name ="nav_header">#1394F0</color>
 
 </resources>

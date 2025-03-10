@@ -39,5 +39,16 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="24dp" />
 
+        <Button
+            android:id="@+id/goToReportButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Go to Report Menu"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:padding="12dp"
+            android:backgroundTint="@color/signIn"
+            android:textColor="@color/white"/>
+
     </LinearLayout>
 </ScrollView>

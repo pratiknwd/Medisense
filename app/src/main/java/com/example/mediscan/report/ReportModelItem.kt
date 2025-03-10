@@ -41,8 +41,8 @@ data class ReportModelItem(
             testName = testName, // Assign if not blank, else null
             testValue = try { testValue.toFloat() } catch (e: Exception) { null }, // Convert safely
             unit = units , // Assign if not blank
-            upperLimit = try { maximumValue.toFloat() } catch (e: Exception) { 10000F }, // Convert safely
-            lowerLimit = try { minimumValue.toFloat() } catch (e: Exception) { -10000F }, // Convert safely
+            upperLimit = try { maximumValue.toFloat() } catch (e: Exception) { 100F }, // Convert safely
+            lowerLimit = try { minimumValue.toFloat() } catch (e: Exception) { 0F }, // Convert safely
             explanation = explanation, // Assign if not blank
             bioReferenceInterval = bioReferenceInterval // Assign if not blank
         )

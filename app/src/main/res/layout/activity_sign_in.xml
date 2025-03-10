@@ -5,18 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".auth.SignInActivity">
+    tools:context=".auth.SignInActivity"
+    android:background="@drawable/gradient_background">
 
-    <ImageView
+    <!-- Logo Image -->
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/logo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="60dp"
-        android:src="@drawable/ic_launcher_foreground"
+        android:layout_width="200dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/medisense_logo"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
+    <!-- Email Input -->
     <EditText
         android:id="@+id/etEmail"
         android:layout_width="0dp"
@@ -24,10 +29,13 @@
         android:layout_margin="16dp"
         android:hint="Email"
         android:inputType="textEmailAddress"
+        android:background="@drawable/input_field_background"
+        android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logo" />
 
+    <!-- Password Input -->
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="0dp"
@@ -35,20 +43,27 @@
         android:layout_margin="16dp"
         android:hint="Password"
         android:inputType="textPassword"
+        android:background="@drawable/input_field_background"
+        android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
+    <!-- Sign In Button -->
     <Button
         android:id="@+id/btnSignIn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="Sign In"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/signIn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etPassword" />
 
+    <!-- Sign Up Text -->
     <TextView
         android:id="@+id/tvSignUp"
         android:layout_width="wrap_content"
@@ -60,4 +75,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnSignIn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

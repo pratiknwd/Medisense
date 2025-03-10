@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/nav_home"
         android:title="Home" />
@@ -9,9 +11,9 @@
     <item
         android:id="@+id/nav_medicine"
         android:title="Scan Medicine" />
-    <item
-        android:id="@+id/nav_profile"
-        android:title="Profile" />
+<!--    <item-->
+<!--        android:id="@+id/nav_profile"-->
+<!--        android:title="Profile" />-->
     <item
         android:id="@+id/nav_scan_report"
         android:title="Scan Report" />
@@ -19,5 +21,11 @@
     <item
         android:id="@+id/nav_my_reports"
         android:title="My Reports" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Logout"
+        android:titleCondensed="Logout"
+        app:actionViewClass="android.widget.TextView"/>
 
 </menu>

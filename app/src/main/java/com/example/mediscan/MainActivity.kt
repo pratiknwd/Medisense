@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.mediscan.auth.PEF_USER_ID
+import com.example.mediscan.auth.PEF_USER_NAME
 import com.example.mediscan.auth.SHARED_PREF_NAME
 import com.example.mediscan.auth.SignInActivity
 import com.example.mediscan.databinding.ActivityMainBinding
@@ -30,8 +32,8 @@ import com.example.mediscan.db.entity.DocumentType
 import com.example.mediscan.db.entity.User
 import com.example.mediscan.db.entity.UserFoodTiming
 import com.example.mediscan.report.SmartReportFragment
-import com.example.mediscan.report.full_report.views.FullReportFragment
 import com.example.mediscan.report.my_reports.MyReportsFragment
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,6 +57,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     
     
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[SharedViewModel::class.java]
         
@@ -98,7 +101,14 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         documentTypeDao = db.documentTypeDao()
         reportDao = db.reportDao()
         reportTypeDao = db.reportTypeDao()
-        
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val headerView = navigationView.getHeaderView(0) // Get the first header view
+        val userNameTextView = headerView.findViewById<TextView>(R.id.tvUserName)
+
+        // Fetch logged-in user name (Replace this with your actual logic)
+        val loggedUserName = getLoggedUserName(applicationContext)
+        userNameTextView.text = "Welcome $loggedUserName"
+
         // Insert dummy data
         // insertDummyData()
         
@@ -111,7 +121,14 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         }
         
     }
-    
+    private fun getLoggedUserName(context: Context): String {
+        val sharedPref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
+        val username = sharedPref.getString(PEF_USER_NAME, "Guest") ?: "Guest"
+        return username.replaceFirstChar { it.uppercaseChar() }
+    }
+
+
+
     private fun insertDummyData() {
         lifecycleScope.launch(Dispatchers.IO) {
             
@@ -153,9 +170,15 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             R.id.nav_home -> loadFragment(supportFragmentManager, HomeFragment.newInstance(), HomeFragment.FRAG_NAME)
             R.id.nav_pres -> loadFragment(supportFragmentManager, PrescriptionFragment.newInstance(), PrescriptionFragment.FRAG_NAME)
             R.id.nav_medicine -> loadFragment(supportFragmentManager, MedicineScanFragment.newInstance(), MedicineScanFragment.FRAG_NAME)
-            R.id.nav_profile -> loadFragment(supportFragmentManager, ProfileFragment.newInstance(), ProfileFragment.FRAG_NAME)
+//            R.id.nav_profile -> loadFragment(supportFragmentManager, ProfileFragment.newInstance(), ProfileFragment.FRAG_NAME)
             R.id.nav_scan_report -> loadFragment(supportFragmentManager, ScanReportFragment.newInstance(), ScanReportFragment.FRAG_NAME)
             R.id.nav_my_reports -> loadFragment(supportFragmentManager, MyReportsFragment.newInstance(), MyReportsFragment.FRAG_NAME)
+            R.id.nav_my_reports -> loadFragment(supportFragmentManager, MyReportsFragment.newInstance(), MyReportsFragment.FRAG_NAME)
+
+            R.id.nav_logout -> {
+                logoutUser(this)
+                return true
+            }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
@@ -177,7 +200,8 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             .addToBackStack(null)
             .commitAllowingStateLoss()
     }
-    
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (toggle.onOptionsItemSelected(item)) {
             true

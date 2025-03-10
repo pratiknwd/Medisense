@@ -40,6 +40,7 @@ class SmartReportFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         smartReportVP2Adapter = SmartReportViewPagerAdapter(reportTypeId, this)
+        binding.smartReportVP2.offscreenPageLimit=2
         binding.smartReportVP2.adapter = smartReportVP2Adapter
         
         TabLayoutMediator(binding.smartReportTabLayout, binding.smartReportVP2) { tab, position ->

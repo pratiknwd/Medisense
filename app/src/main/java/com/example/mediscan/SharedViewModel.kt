@@ -1,5 +1,6 @@
 package com.example.mediscan
 
+import ReportWithRecommendation
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
@@ -14,6 +15,7 @@ import com.example.mediscan.auth.SHARED_PREF_NAME
 import com.example.mediscan.db.AppDatabase
 import com.example.mediscan.db.entity.MedicineDetails
 import com.example.mediscan.db.entity.MedicinePlan
+import com.example.mediscan.db.entity.Report
 import com.example.mediscan.db.entity.ReportType
 import com.example.mediscan.prescription.PrescriptionModel
 import com.example.mediscan.prescription.PrescriptionModelItem
@@ -56,6 +58,8 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
     private val _report = MutableLiveData<P_STATES>()
     val report: LiveData<P_STATES> get() = _report
     var reportModel: MutableList<ReportModelItem> = mutableListOf()
+    private val _recommendationsLiveData = MutableLiveData<List<ReportWithRecommendation>>()
+
     
     init {
         val generationConfig = generationConfig {
@@ -135,6 +139,20 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
         } catch (e: Exception) {
             "Error: ${e.message}"
         }
+    }
+
+    suspend fun getRecommendationForReport(report: Report): String {
+        val query = """
+            You are a medical doctor. This is a user's test result:
+            - Test Name: ${report.testName}
+            - Test Value: ${report.testValue} ${report.unit ?: ""}
+            - Normal Range: ${report.lowerLimit} - ${report.upperLimit}
+            
+            Give a recommendation on how to improve organically, including diet recommendations and home remedies.
+            Provide an answer in around 100 words.
+        """.trimIndent()
+
+        return getResponseFromGemini(query) ?: "No recommendation available"
     }
     
     
@@ -229,6 +247,7 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
             callback(response) // Send result back to UI
         }
     }
+
     
     private fun getUserId(context: Context): Int {
         val sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)

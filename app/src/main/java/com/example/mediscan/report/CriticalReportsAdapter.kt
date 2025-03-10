@@ -42,6 +42,7 @@ class CriticalReportsAdapter : RecyclerView.Adapter<CriticalReportsAdapter.Criti
         holder.apply {
             subTestTV.text = reports[position].testName
             currentValueTV.text = reports[position].testValue.toString()
+            currentValueTV.setTextColor(ContextCompat.getColor(itemView.context, R.color.critical))
             valueUnit.text = reports[position].unit ?: ""
             rangeTV.text = "${reports[position].lowerLimit} - ${reports[position].upperLimit}"
             riskTV.text = "Explain the risk"
