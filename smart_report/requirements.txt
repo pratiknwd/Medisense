@@ -1,0 +1,9 @@
+pandas
+google-generativeai
+scikit-learn
+pillow
+streamlit
+llmwhisperer-client
+pdf2image
+presidio-analyzer
+presidio-anonymizer

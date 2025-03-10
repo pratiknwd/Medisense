@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -17,10 +18,23 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.mediscan.auth.PEF_USER_ID
 import com.example.mediscan.auth.SHARED_PREF_NAME
 import com.example.mediscan.auth.SignInActivity
 import com.example.mediscan.databinding.ActivityMainBinding
+import com.example.mediscan.db.AppDatabase
+import com.example.mediscan.db.dao.DocumentDao
+import com.example.mediscan.db.dao.DocumentTypeDao
+import com.example.mediscan.db.dao.MedicinePlanDao
+import com.example.mediscan.db.dao.ReportDao
+import com.example.mediscan.db.dao.ReportTypeDao
+import com.example.mediscan.db.dao.UserDao
+import com.example.mediscan.db.dao.UserFoodTimingDao
+import com.example.mediscan.db.entity.Document
+import com.example.mediscan.db.entity.DocumentType
+import com.example.mediscan.db.entity.User
+import com.example.mediscan.db.entity.UserFoodTiming
 import com.example.mediscan.report.SmartReportFragment
 import com.example.mediscan.report.my_reports.MyReportsFragment
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
@@ -36,6 +50,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     
     
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[SharedViewModel::class.java]
         
@@ -107,9 +122,15 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             R.id.nav_home -> loadFragment(supportFragmentManager, HomeFragment.newInstance(), HomeFragment.FRAG_NAME)
             R.id.nav_pres -> loadFragment(supportFragmentManager, PrescriptionFragment.newInstance(), PrescriptionFragment.FRAG_NAME)
             R.id.nav_medicine -> loadFragment(supportFragmentManager, MedicineScanFragment.newInstance(), MedicineScanFragment.FRAG_NAME)
-            R.id.nav_profile -> loadFragment(supportFragmentManager, ProfileFragment.newInstance(), ProfileFragment.FRAG_NAME)
+//            R.id.nav_profile -> loadFragment(supportFragmentManager, ProfileFragment.newInstance(), ProfileFragment.FRAG_NAME)
             R.id.nav_scan_report -> loadFragment(supportFragmentManager, ScanReportFragment.newInstance(), ScanReportFragment.FRAG_NAME)
             R.id.nav_my_reports -> loadFragment(supportFragmentManager, MyReportsFragment.newInstance(), MyReportsFragment.FRAG_NAME)
+            R.id.nav_my_reports -> loadFragment(supportFragmentManager, MyReportsFragment.newInstance(), MyReportsFragment.FRAG_NAME)
+
+            R.id.nav_logout -> {
+                logoutUser(this)
+                return true
+            }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
@@ -117,14 +138,22 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     
     fun openFullReportFragment(reportTypeId: Int) {
         val fragment = SmartReportFragment.newInstance(reportTypeId)
-        supportFragmentManager.beginTransaction().replace(R.id.frag_container, fragment, SmartReportFragment.FRAG_NAME).addToBackStack(SmartReportFragment.FRAG_NAME).commit()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.frag_container, fragment, SmartReportFragment.FRAG_NAME)
+            .addToBackStack(SmartReportFragment.FRAG_NAME)
+            .commit()
     }
     
     
     fun loadFragment(fragmentManager: FragmentManager, fragment: Fragment, tag: String) {
-        fragmentManager.beginTransaction().replace(R.id.frag_container, fragment, tag).addToBackStack(null).commitAllowingStateLoss()
+        fragmentManager.beginTransaction()
+            .replace(R.id.frag_container, fragment, tag)
+            .addToBackStack(null)
+            .commitAllowingStateLoss()
     }
-    
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (toggle.onOptionsItemSelected(item)) {
             true

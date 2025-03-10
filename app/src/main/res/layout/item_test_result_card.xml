@@ -37,6 +37,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/guideline1"
                 app:layout_constraintStart_toEndOf="@+id/indicator"
                 app:layout_constraintTop_toTopOf="parent"
+                android:textStyle="bold"
                 tools:text="SGOT/AST" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -66,6 +67,8 @@
                 app:layout_constraintBottom_toTopOf="@+id/valueUnit"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toEndOf="@+id/guideline1"
+                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="SGOT/AST" />
 
