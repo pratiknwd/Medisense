@@ -53,9 +53,9 @@ class PDFUtil {
                 // Create PDF Writer & Document
                 val pdfWriter = PdfWriter(FileOutputStream(file))
                 val pdfDocument = PdfDocument(pdfWriter)
-                pdfDocument.addEventHandler(PdfDocumentEvent.INSERT_PAGE, HeaderFooterHandler())
+                // pdfDocument.addEventHandler(PdfDocumentEvent.INSERT_PAGE, HeaderFooterHandler())
                 val document = com.itextpdf.layout.Document(pdfDocument, PageSize.A4)
-                document.setMargins(0f, 0f, 0f, 0f)
+                document.setMargins(8f, 8f, 8f, 8f)
                 
                 
                 // Loop through each report and create a card
