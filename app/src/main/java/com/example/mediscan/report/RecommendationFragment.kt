@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mediscan.BaseFragment
+import com.example.mediscan.SharedViewModel
 import com.example.mediscan.databinding.FragmentRecommendationBinding
 import com.example.mediscan.db.AppDatabase
 import com.example.mediscan.db.dao.ReportDao
+import getRecommendationsForReports
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
@@ -47,8 +50,12 @@ class RecommendationFragment : BaseFragment() {
         }
         
         lifecycleScope.launch {
+            val sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+
             val recommendationReports = reportsDao.getCriticalReport(reportTypeId)
-            recommendationReportAdapter.updateData(recommendationReports)
+            val reportsWithRecommendations = getRecommendationsForReports(recommendationReports, sharedViewModel)
+//            Log.d("pratik", "onViewCreated: $reportsWithRecommendations")
+            recommendationReportAdapter.updateData(reportsWithRecommendations)
         }
     }
     

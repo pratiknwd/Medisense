@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.mediscan.databinding.FragmentHomeBinding
+import com.example.mediscan.report.my_reports.MyReportsFragment
 
 class HomeFragment : BaseFragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -28,6 +29,10 @@ class HomeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.goToPrescriptionBtn.setOnClickListener {
             (requireActivity() as MainActivity).loadFragment(requireActivity().supportFragmentManager, PrescriptionFragment.newInstance(), PrescriptionFragment.FRAG_NAME)
+        }
+
+        binding.goToReportAnalyser.setOnClickListener{
+            (requireActivity() as MainActivity).loadFragment(requireActivity().supportFragmentManager, MyReportsFragment.newInstance(), PrescriptionFragment.FRAG_NAME)
         }
         
         binding.goToMedicineBtn.setOnClickListener {

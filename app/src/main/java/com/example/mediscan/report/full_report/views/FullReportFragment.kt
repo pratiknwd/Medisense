@@ -1,6 +1,7 @@
 package com.example.mediscan.report.full_report.views
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,9 @@ class FullReportFragment : BaseFragment() {
         lifecycleScope.launch {
             val reports = reportDao.getReportsByType(reportTypeId)
             fullReportAdapter.addReport(reports)
+            val criticalreport = reportDao.getReportsByTypeAndValueOutOfRange(reportTypeId)
+            Log.d("pratik", "onViewCreated: $criticalreport")
+
         }
     }
     

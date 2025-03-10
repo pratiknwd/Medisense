@@ -15,12 +15,13 @@ import com.example.mediscan.viewmodel.AuthViewModel
 const val SHARED_PREF_NAME = "SharedPref"
 const val PEF_USER_ID = "userId"
 
+
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory(AuthRepository(applicationContext))
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInBinding.inflate(layoutInflater)
@@ -67,7 +68,7 @@ class SignInActivity : AppCompatActivity() {
     
     private fun isUserLoggedIn(context: Context): Boolean {
         val sharedPref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
-        return sharedPref.getInt(PEF_USER_ID, -1) != -1
+        return sharedPref.getInt(PEF_USER_ID, -1,) != -1
     }
     
 }

@@ -9,27 +9,36 @@
     android:scrollbars="none"
     tools:context=".auth.SignUpActivity">
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_background">
 
-        <ImageView
+
+        <!-- Logo Image -->
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/logo"
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="150dp"
             android:layout_marginTop="40dp"
-            android:src="@drawable/ic_launcher_foreground"
+            android:src="@drawable/medisense_logo"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <EditText
             android:id="@+id/userName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:padding="12dp"
             android:hint="User Name"
             android:inputType="text"
+            android:background="@drawable/input_field_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo" />
@@ -39,8 +48,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:padding="12dp"
             android:hint="Age"
             android:inputType="number"
+            android:background="@drawable/input_field_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/userName" />
@@ -51,8 +62,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:padding="12dp"
             android:hint="Gender"
             android:inputType="text"
+            android:background="@drawable/input_field_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/userAge" />
@@ -62,8 +75,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:padding="12dp"
             android:hint="Email"
             android:inputType="textEmailAddress"
+            android:background="@drawable/input_field_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/userGender" />
@@ -73,6 +88,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:padding="12dp"
+            android:background="@drawable/input_field_background"
             android:hint="Password"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
@@ -84,6 +101,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:padding="12dp"
+            android:background="@drawable/input_field_background"
             android:hint="Confirm Password"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
@@ -96,6 +115,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:text="Sign Up"
+            android:backgroundTint="@color/signIn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etConfirmPassword" />

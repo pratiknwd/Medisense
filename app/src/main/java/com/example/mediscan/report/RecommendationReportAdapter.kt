@@ -1,5 +1,6 @@
 package com.example.mediscan.report
 
+import ReportWithRecommendation
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,10 +8,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mediscan.R
-import com.example.mediscan.db.entity.Report
 
 class RecommendationReportAdapter : RecyclerView.Adapter<RecommendationReportAdapter.RecommendationReportViewHolder>() {
-    private val reports: MutableList<Report> = mutableListOf()
+    private val reports: MutableList<ReportWithRecommendation> = mutableListOf()
     
     inner class RecommendationReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val indicator: View = itemView.findViewById(R.id.indicator)
@@ -43,12 +43,12 @@ class RecommendationReportAdapter : RecyclerView.Adapter<RecommendationReportAda
             currentValueTV.text = reports[position].testValue.toString()
             valueUnit.text = reports[position].unit ?: ""
             rangeTV.text = "${reports[position].lowerLimit} - ${reports[position].upperLimit}"
-            riskTV.text = "Explain the risk"
-            recommendationTV.text = reports[position].explanation
+            riskTV.text = "Recomendation For This"
+            recommendationTV.text = reports[position].recommendation
         }
     }
     
-    fun updateData(report: List<Report>) {
+    fun updateData(report: List<ReportWithRecommendation>) {
         reports.clear()
         reports.addAll(report)
         notifyDataSetChanged()

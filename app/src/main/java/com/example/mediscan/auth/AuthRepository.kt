@@ -8,6 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 data class AuthResult(val success: Boolean, val message: String)
+const val PEF_USER_NAME = "user_name"
+
 
 class AuthRepository(private val context: Context) {
     private val userDao: UserDao = AppDatabase.getDatabase(context).userDao()
@@ -29,7 +31,7 @@ class AuthRepository(private val context: Context) {
         return withContext(Dispatchers.IO) {
             val user = userDao.getUserByEmail(email)
             if (user != null && user.password == password) {
-                saveUserIdInPreferences(user.userId)
+                saveUserIdInPreferences(user.userId, user.userName)
                 AuthResult(true, "Login successful")
             } else {
                 AuthResult(false, "Invalid email or password")
@@ -37,12 +39,14 @@ class AuthRepository(private val context: Context) {
         }
     }
     
-    private fun saveUserIdInPreferences(userId: Int) {
+    private fun saveUserIdInPreferences(userId: Int, userName: String) {
         val sharedPref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
             putInt(PEF_USER_ID, userId)
+            putString(PEF_USER_NAME, userName)
             apply()
         }
     }
+
 }
 

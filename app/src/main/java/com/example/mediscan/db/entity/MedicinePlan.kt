@@ -14,14 +14,9 @@ import androidx.room.PrimaryKey
     )]
 )
 data class MedicinePlan(
-    @PrimaryKey(autoGenerate = true) val planId: Int,
-    val userId: Int,  // Foreign Key
-    val status: Boolean,
-    val medicineName: String,
-    val dose: String,
-    val frequency: String,
-    val duration: String,
-    val times: String,
-    val foodInstruction: String,
-    val startDate: String
+    @PrimaryKey(autoGenerate = true) val planId: Int = 0,
+    val userId: Int,  // Foreign Key to User
+    val status: String,  // "Active" or "Blocked"
+    val startDate: String,  // Store as String (e.g., "2025-03-07")
+    val endDate: String  // Maximum duration from MedicineDetails
 )

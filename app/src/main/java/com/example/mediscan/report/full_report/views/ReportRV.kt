@@ -1,5 +1,6 @@
 package com.example.mediscan.report.full_report.views
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,29 @@ class ReportRV : RecyclerView.Adapter<ReportRV.ReportViewHolder>() {
         holder.apply {
             subTestTV.text = reports[position].testName
             currentValueTV.text = reports[position].testValue.toString()
+            val report = reports[position]
+            val testValue = report.testValue ?: Float.MAX_VALUE
+            val lowerLimit = report.lowerLimit
+            val upperLimit = report.upperLimit
+
+// 🔹 Check if the value is out of range and set color
+            val textColor = if (
+                (lowerLimit != null && testValue < lowerLimit) ||
+                (upperLimit != null && testValue > upperLimit)
+            ) {
+                Color.RED // If out of range, set RED
+            } else {
+                Color.GREEN // Otherwise, set GREEN
+            }
+
+// 🔹 Apply color to TextView
+            currentValueTV.setTextColor(textColor)
+            indicator.setBackgroundColor(textColor)
+
+// 🔹 Set value text
+            currentValueTV.text = testValue.toString()
+
+
             valueUnit.text = reports[position].unit ?: ""
             rangeTV.text = "${reports[position].lowerLimit} - ${reports[position].upperLimit}"
             riskTV.text = "TODO: get indication from LLM"

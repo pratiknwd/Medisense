@@ -4,9 +4,11 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.Toast
@@ -26,6 +28,7 @@ class MedicineScanFragment : BaseFragment() {
     private var uri: Uri? = null
     private lateinit var viewModel: SharedViewModel
     private var response: String? = null
+    private var llmresponse: String? = null
     
     private val pickImageLauncher: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
@@ -61,6 +64,7 @@ class MedicineScanFragment : BaseFragment() {
             binding.imageView.setImageBitmap(ImageUtil.getBitmapFromUri(requireContext(), uri!!))
         }
         binding.startTTS.setOnClickListener { response?.let { it1 -> viewModel.startSpeech(it1) } }
+        binding.startTTS.setOnClickListener { llmresponse?.let { it1 -> viewModel.startSpeech(it1) } }
         binding.stopTTS.setOnClickListener { viewModel.stopSpeech() }
         binding.chooseImageBtn.setOnClickListener { pickImageLauncher.launch("image/*") }
         binding.etQuery.setOnClickListener {
@@ -80,13 +84,13 @@ class MedicineScanFragment : BaseFragment() {
 
         val btnDosage = view.findViewById<Button>(R.id.btnMedicineUsage)
         val btnSideEffects = view.findViewById<Button>(R.id.btnSideEffects)
-        val btnAlternatives = view.findViewById<Button>(R.id.btnClose) // Corrected ID
+        val btnClose = view.findViewById<Button>(R.id.btnClose) // Corrected ID
         val btnAskAnything = view.findViewById<Button>(R.id.btnAskAnything) // Custom query button
 
         btnDosage.setOnClickListener {
             binding.etQuery.requestFocus()
 
-            sendQueryToLLM("Tell me the dosage of ${binding.textView.text}")
+            sendQueryToLLM("What is the pharmacological class of ${binding.textView.text}, and what are its typical uses?")
             bottomSheet.dismiss()
             closeKeyboard(btnDosage, requireContext())
         }
@@ -98,24 +102,53 @@ class MedicineScanFragment : BaseFragment() {
             closeKeyboard(btnSideEffects, requireContext())
         }
 
-        btnAlternatives.setOnClickListener {
-            binding.etQuery.requestFocus()
-            sendQueryToLLM("Suggest alternatives for ${binding.textView.text}")
+        btnClose.setOnClickListener {
             bottomSheet.dismiss()
             closeKeyboard(binding.etQuery, requireContext())
         }
 
         // Open keyboard for user input when "Ask Anything" is clicked
-        btnAskAnything.setOnClickListener {
-            bottomSheet.dismiss() // Close the bottom sheet first
+//        btnAskAnything.setOnClickListener {
+//
+//            // Ensure EditText is focusable
+//            binding.etQuery.isFocusableInTouchMode = true
+//            binding.etQuery.requestFocus()
+//            openKeyboard(binding.etQuery, requireContext())
+//
+//
+//            // Open keyboard
+//            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//            imm.showSoftInput(binding.etQuery, InputMethodManager.SHOW_IMPLICIT)
+//        }
+        binding.etQuery.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER) {
 
-            // Ensure EditText is focusable
+                val query = binding.etQuery.text.toString().trim()
+                val medicineName = binding.textView.text.toString()
+
+                val prompt = "For the medicine $medicineName, you may relate the following question:\n\n$query"
+
+                if (query.isNotEmpty()) {
+                    sendQueryToLLM(prompt)
+                }
+
+                // Hide the keyboard after submission
+                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.etQuery.windowToken, 0)
+
+                true
+            } else {
+                false
+            }
+        }
+
+        btnAskAnything.setOnClickListener {
             binding.etQuery.isFocusableInTouchMode = true
+            bottomSheet.dismiss()
             binding.etQuery.requestFocus()
             openKeyboard(binding.etQuery, requireContext())
 
-
-            // Open keyboard
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(binding.etQuery, InputMethodManager.SHOW_IMPLICIT)
         }
@@ -144,7 +177,9 @@ class MedicineScanFragment : BaseFragment() {
 
         viewModel.getResponseForQuery(adjustedQuery) { response ->
             if (!response.isNullOrBlank()) {
+                this.llmresponse = response
                 binding.llm.text = response // Update UI with LLM response
+                viewModel.startSpeech(response)
             } else {
                 binding.llm.text = "No Available Response."
             }
