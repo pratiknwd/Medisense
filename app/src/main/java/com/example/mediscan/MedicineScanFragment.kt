@@ -112,7 +112,7 @@ class MedicineScanFragment : BaseFragment() {
             binding.imageView.setImageBitmap(ImageUtil.getBitmapFromUri(requireContext(), imageUri!!))
         }
         binding.startTTS.setOnClickListener { response?.let { it1 -> sharedViewModel.startSpeech(it1) } }
-        binding.startTTS.setOnClickListener { llmresponse?.let { it1 -> viewModel.startSpeech(it1) } }
+        binding.startTTS.setOnClickListener { llmresponse?.let { it1 -> sharedViewModel.startSpeech(it1) } }
         binding.stopTTS.setOnClickListener { sharedViewModel.stopSpeech() }
         binding.chooseImageBtn.setOnClickListener {
 //            pickImageLauncher.launch("image/*")
@@ -230,7 +230,7 @@ class MedicineScanFragment : BaseFragment() {
             if (!response.isNullOrBlank()) {
                 this.llmresponse = response
                 binding.llm.text = response // Update UI with LLM response
-                viewModel.startSpeech(response)
+                sharedViewModel.startSpeech(response)
             } else {
                 binding.llm.text = "No Available Response."
             }
