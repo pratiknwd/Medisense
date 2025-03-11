@@ -1,7 +1,10 @@
 package com.example.mediscan
 
+import android.app.AlertDialog
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,10 +12,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mediscan.databinding.ActivityScanReportBinding
 import com.example.mediscan.report.ReportModelItem
+import java.io.File
 import com.example.mediscan.report.my_reports.MyReportsFragment
 
 private const val REPORT_PROMPT: String = """You are Senior Doctor and an expert in analyzing health reports.
@@ -35,41 +40,77 @@ private const val REPORT_PROMPT: String = """You are Senior Doctor and an expert
     </input>
     answer"""
 
-class ScanReportFragment : BaseFragment(){
+class ScanReportFragment : BaseFragment() {
     private var _binding: ActivityScanReportBinding? = null
     private val binding get() = _binding!!
-    private var uri: Uri? = null
+    private var imageUri: Uri? = null
     private lateinit var sharedViewModel: SharedViewModel
-
-
+    
+    
     private val pickImageLauncher: ActivityResultLauncher<String> = registerForActivityResult(
-        ActivityResultContracts.GetContent()) { uri: Uri? ->
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
         uri?.let {
-            Log.d("9155881234", "pickImageLauncher")
-            this.uri = it
+            this.imageUri = it
             val bitmapFromUri = ImageUtil.getBitmapFromUri(requireContext(), it)
             binding.imageView.setImageBitmap(bitmapFromUri)
             sharedViewModel.getResponseForReport(bitmapFromUri, REPORT_PROMPT)
         }
     }
-
-
-    override fun onNavigationIconClick(iconTapped: View?) {
-
+    
+    private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            val bitmapFromUri = imageUri?.let { ImageUtil.getBitmapFromUri(requireContext(), it) }
+            binding.imageView.setImageBitmap(bitmapFromUri)
+            if (bitmapFromUri != null) {
+                sharedViewModel.getResponseForReport(bitmapFromUri, REPORT_PROMPT)
+            }
+        }
     }
-
+    
+    private fun showImagePickerDialog(context: Context) {
+        val options = arrayOf("Take Photo", "Choose from Gallery")
+        AlertDialog.Builder(context)
+            .setTitle("Select Image")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> openCamera(context)
+                    1 -> openGallery()
+                }
+            }
+            .show()
+    }
+    
+    private fun openCamera(context: Context) {
+        imageUri = createImageUri(context)
+        takePictureLauncher.launch(imageUri)
+    }
+    
+    private fun openGallery() {
+        pickImageLauncher.launch("image/*")
+    }
+    
+    private fun createImageUri(context: Context): Uri {
+        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "${System.currentTimeMillis()}.jpg")
+        return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+    }
+    
+    override fun onNavigationIconClick(iconTapped: View?) {
+    
+    }
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         Log.d("9155881234", "created $FRAG_NAME")
 
     }
-
+    
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = ActivityScanReportBinding.inflate(inflater, container, false)
         return binding.root
     }
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.goToReportButton.visibility = View.GONE
@@ -100,8 +141,11 @@ class ScanReportFragment : BaseFragment(){
                 }
             }
         }
-
-        binding.chooseReportBtn.setOnClickListener { pickImageLauncher.launch("image/*") }
+        
+        binding.chooseReportBtn.setOnClickListener {
+//            pickImageLauncher.launch("image/*")
+            showImagePickerDialog(requireContext())
+        }
     }
 
     private fun loadFragment(fragment: Fragment, tag: String) {
@@ -119,25 +163,25 @@ class ScanReportFragment : BaseFragment(){
         }
         return sb.toString()
     }
-
+    
     override fun onResume() {
         super.onResume()
         initToolbar((activity as MainActivity).toolbar, FRAG_NAME)
     }
-
+    
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
+    
     override fun onDestroy() {
         super.onDestroy()
         Log.d("9155881234", "destroyed $FRAG_NAME")
     }
-
+    
     companion object {
         const val FRAG_NAME = "ScanReport"
-
+        
         @JvmStatic
         fun newInstance() = ScanReportFragment()
     }

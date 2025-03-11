@@ -6,10 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mediscan.BaseFragment
 import com.example.mediscan.MainActivity
+import com.example.mediscan.PDFUtil
 import com.example.mediscan.auth.PEF_USER_ID
 import com.example.mediscan.auth.SHARED_PREF_NAME
 import com.example.mediscan.databinding.FragmentMyReportsBinding
@@ -32,7 +34,19 @@ class MyReportsFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         val db by lazy { AppDatabase.getDatabase(requireContext()) }
         reportTypeDao = db.reportTypeDao()
-        myReportsAdapter = MyReportsAdapter { reportTypeId -> (requireActivity() as MainActivity).openFullReportFragment(reportTypeId) }
+        myReportsAdapter = MyReportsAdapter(
+            { reportTypeId -> (requireActivity() as MainActivity).openFullReportFragment(reportTypeId) },
+            { reportTypeId -> onDownloadReportClick(reportTypeId) }
+        )
+    }
+    
+    private fun onDownloadReportClick(reportTypeId: Int) {
+        Toast.makeText(requireContext(), "pdf download initialized", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            val reportsDao = AppDatabase.getDatabase(requireContext()).reportDao()
+            val criticalReports = reportsDao.getCriticalReport(reportTypeId)
+            PDFUtil.createReportPDF(requireContext(), criticalReports)
+        }
     }
     
     private fun getUserId(context: Context): Int {

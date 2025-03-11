@@ -165,6 +165,7 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
     }
     
     private fun getPrescription(json: String?) {
+        Log.d("9155881234", "prescriptionJson: \n$json")
         val trimmedJson = trimJson(json)
         val model: PrescriptionModel? = formatJsonForPrescription(trimmedJson)
         if (model == null) {

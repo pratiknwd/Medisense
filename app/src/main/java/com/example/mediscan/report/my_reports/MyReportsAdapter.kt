@@ -14,7 +14,7 @@ import kotlin.random.Random
 
 class MyReportsAdapter(
     private val onSmartReportClick: (Int) -> Unit,
-    /*private val onViewReportClick: (Int) -> Unit*/
+    private val onViewReportClick: (Int) -> Unit
 ) : RecyclerView.Adapter<MyReportsAdapter.MyReportsViewHolder>() {
     private val myReportsList: MutableList<ReportType> = mutableListOf()
     
@@ -66,6 +66,12 @@ class MyReportsAdapter(
                 val position = adapterPosition
                 if (position == RecyclerView.NO_POSITION) return@setOnClickListener
                 onSmartReportClick.invoke(myReportsList[position].reportTypeId)
+            }
+            
+            btnViewReport.setOnClickListener {
+                val position = adapterPosition
+                if (position == RecyclerView.NO_POSITION) return@setOnClickListener
+                onViewReportClick.invoke(myReportsList[position].reportTypeId)
             }
         }
         
