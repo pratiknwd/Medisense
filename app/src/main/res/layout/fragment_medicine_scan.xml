@@ -35,13 +35,13 @@
             android:id="@+id/et_query"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ask your query"
-            android:textSize="18sp"
-            android:padding="16dp"
             android:layout_marginHorizontal="25dp"
             android:background="@drawable/rounded_border"
+            android:focusable="false"
+            android:hint="Ask your query"
             android:inputType="text"
-            android:focusable="false" />
+            android:padding="16dp"
+            android:textSize="18sp" />
 
 
         <TextView
@@ -49,12 +49,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            tools:text="Test text"
-            android:textSize="20sp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="24dp"
+            android:backgroundTint="#E8F5E9"
+            android:textColor="#3F51B5"
+            android:textColorHint="#757575"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#3F51B5"  android:textColorHint="#757575" android:backgroundTint="#E8F5E9" />
+            tools:text="Test text" />
 
         <TextView
             android:id="@+id/llm"

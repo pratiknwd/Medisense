@@ -14,7 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import com.example.mediscan.databinding.FragmentPrescriptionBinding
-import com.example.mediscan.prescription.PrescriptionModelItem
+import com.example.mediscan.prescription.PrescriptionListFragment
 import java.io.File
 
 private const val PRESCRIPTION_PROMPT: String = """
@@ -86,6 +86,7 @@ class PrescriptionFragment : BaseFragment() {
     private val binding get() = _binding!!
     private var imageUri: Uri? = null
     private lateinit var sharedViewModel: SharedViewModel
+    private var isListLoaded = true
     
     
     private val pickImageLauncher: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -109,9 +110,10 @@ class PrescriptionFragment : BaseFragment() {
     }
     
     private fun showImagePickerDialog(context: Context) {
-        val options = arrayOf("Take Photo", "Choose from Gallery")
-        AlertDialog.Builder(context)
-            .setTitle("Select Image")
+        val options = arrayOf(getString(R.string.take_photo), getString(R.string.choose_from_gallery))
+        AlertDialog
+            .Builder(context)
+            .setTitle(getString(R.string.select_image))
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> openCamera(context)
@@ -128,6 +130,16 @@ class PrescriptionFragment : BaseFragment() {
     
     private fun openGallery() {
         pickImageLauncher.launch("image/*")
+    }
+    
+    private fun openPrescriptionListFragment() {
+        Log.d("9155881234", "openPrescriptionListFragment")
+        val prescriptionListFragment = PrescriptionListFragment.newInstance()
+        parentFragmentManager.beginTransaction().replace(
+            R.id.frag_container,
+            prescriptionListFragment,
+            PrescriptionListFragment.FRAG_NAME
+        ).addToBackStack(null).commit()
     }
     
     private fun createImageUri(context: Context): Uri {
@@ -152,28 +164,28 @@ class PrescriptionFragment : BaseFragment() {
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedViewModel.prescription.observe(viewLifecycleOwner) {
-            it ?: return@observe
-            binding.prescriptionTextView.text = when (it) {
+        sharedViewModel.prescription.observe(viewLifecycleOwner) { state ->
+            if (state == null || isListLoaded) {
+                return@observe
+            }
+            
+            Log.d("9155881234", "prescription.observe called")
+            binding.prescriptionTextView.text = when (state) {
                 P_STATES.LOADING -> "Loading"
                 P_STATES.ERROR -> "Could not identify prescription. Please upload a prescription image."
-                P_STATES.EMPTY -> "Empty"
-                P_STATES.NOT_EMPTY -> getFormattedPrescription(sharedViewModel.prescriptionModel)
+                P_STATES.EMPTY -> "Empty list"
+                P_STATES.NOT_EMPTY -> "".also {
+                    isListLoaded = true
+                    openPrescriptionListFragment()
+                }
+                
             }
         }
         
         binding.chooseImageBtn.setOnClickListener {
-//            pickImageLauncher.launch("image/*")
+            isListLoaded = false
             showImagePickerDialog(requireContext())
         }
-    }
-    
-    private fun getFormattedPrescription(list: List<PrescriptionModelItem>): String {
-        val sb = StringBuilder()
-        list.forEach {
-            sb.append(it.toString()).append("\n\n")
-        }
-        return sb.toString()
     }
     
     override fun onResume() {
