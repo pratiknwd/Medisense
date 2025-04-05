@@ -59,7 +59,7 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
     val report: LiveData<P_STATES> get() = _report
     var reportModel: MutableList<ReportModelItem> = mutableListOf()
     private val _recommendationsLiveData = MutableLiveData<List<ReportWithRecommendation>>()
-
+    
     
     init {
         val generationConfig = generationConfig {
@@ -140,7 +140,7 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
             "Error: ${e.message}"
         }
     }
-
+    
     suspend fun getRecommendationForReport(report: Report): String {
         val query = """
             You are a medical doctor. This is a user's test result:
@@ -151,7 +151,7 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
             Give a recommendation on how to improve organically, including diet recommendations and home remedies.
             Provide an answer in around 100 words.
         """.trimIndent()
-
+        
         return getResponseFromGemini(query) ?: "No recommendation available"
     }
     
@@ -180,10 +180,11 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
         prescriptionModel.clear()
         prescriptionModel.addAll(modelList)
         Log.d("PrescriptionState", "Prescription state updated: ${modelList}")
-        viewModelScope.launch { insertPresciptionData(modelList)}
         _prescription.postValue(P_STATES.NOT_EMPTY)
 
     }
+
+    fun insertPrescriptionData() = viewModelScope.launch { insertPresciptionData(prescriptionModel) }
 
     private fun getReport(json: String?) {
         val trimmedJson = trimJson(json)
