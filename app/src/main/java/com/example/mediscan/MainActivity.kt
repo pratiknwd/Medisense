@@ -6,8 +6,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -18,25 +18,14 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.mediscan.auth.PEF_USER_ID
+import com.example.mediscan.auth.PEF_USER_NAME
 import com.example.mediscan.auth.SHARED_PREF_NAME
 import com.example.mediscan.auth.SignInActivity
 import com.example.mediscan.databinding.ActivityMainBinding
-import com.example.mediscan.db.AppDatabase
-import com.example.mediscan.db.dao.DocumentDao
-import com.example.mediscan.db.dao.DocumentTypeDao
-import com.example.mediscan.db.dao.MedicinePlanDao
-import com.example.mediscan.db.dao.ReportDao
-import com.example.mediscan.db.dao.ReportTypeDao
-import com.example.mediscan.db.dao.UserDao
-import com.example.mediscan.db.dao.UserFoodTimingDao
-import com.example.mediscan.db.entity.Document
-import com.example.mediscan.db.entity.DocumentType
-import com.example.mediscan.db.entity.User
-import com.example.mediscan.db.entity.UserFoodTiming
 import com.example.mediscan.report.SmartReportFragment
 import com.example.mediscan.report.my_reports.MyReportsFragment
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 
 // https://ai.google.dev/api?lang=android
@@ -80,6 +69,21 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
             checkCameraPermission()
         }
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val headerView = navigationView.getHeaderView(0) // Get the first header view
+        val userNameTextView = headerView.findViewById<TextView>(R.id.tvUserName)
+
+        // Fetch logged-in user name (Replace this with your actual logic)
+        val loggedUserName = getLoggedUserName(applicationContext)
+        userNameTextView.text = "Welcome $loggedUserName"
+    }
+
+
+
+    private fun getLoggedUserName(context: Context): String {
+        val sharedPref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
+        val username = sharedPref.getString(PEF_USER_NAME, "Guest") ?: "Guest"
+        return username.replaceFirstChar { it.uppercaseChar() }
     }
     
     private fun checkCameraPermission() {
