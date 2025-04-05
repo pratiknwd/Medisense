@@ -2,7 +2,41 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.MediScan" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+<!--         <item name="colorPrimary">@color/my_light_primary</item> -->
+<!--        <item name="colorPrimary">@color/colorPrimaryStart</item>-->
+<!--        <item name="colorPrimaryVariant">@color/colorPrimaryEnd</item>-->
+<!--        <item name="colorOnPrimary">@android:color/white</item>-->
+<!--        <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>-->
+<!--        <item name="toolbarStyle">@style/MyToolbarStyle</item>-->
+
+
+<!--        experimrnt -->
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorPrimaryVariant">@color/md_theme_primaryContainer</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
+
+        <!-- Light theme secondary color -->
+        <item name="colorSecondary">@color/md_theme_secondary</item>
+        <item name="colorSecondaryVariant">@color/md_theme_secondaryContainer</item>
+        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_onSecondaryContainer</item>
+
+        <!-- Light theme tertiary color -->
+        <item name="colorTertiary">@color/md_theme_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_onTertiary</item>
+
+        <!-- Background and Surface colors -->
+<!--        <item name="colorBackground">@color/md_theme_background</item>-->
+        <item name="colorOnBackground">@color/md_theme_onBackground</item>
+        <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+
+        <!-- Error colors -->
+        <item name="colorError">@color/md_theme_error</item>
+        <item name="colorOnError">@color/md_theme_onError</item>
+
+        <!-- Other styles -->
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
         <item name="toolbarStyle">@style/MyToolbarStyle</item>
     </style>
