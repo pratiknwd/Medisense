@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/medicine_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Medicine Name"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/dose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Dose"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/frequency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Frequency"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Duration"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/food_instruction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Food Instruction"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/times"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Times (comma-separated)"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveChanges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:text="Save changes" />
+
+    </LinearLayout>
+</ScrollView>

@@ -68,9 +68,9 @@ class MedicineScanFragment : BaseFragment() {
     }
     
     private fun showImagePickerDialog(context: Context) {
-        val options = arrayOf("Take Photo", "Choose from Gallery")
+        val options = arrayOf(getString(R.string.take_photo), getString(R.string.choose_from_gallery))
         AlertDialog.Builder(context)
-            .setTitle("Select Image")
+            .setTitle(getString(R.string.select_image))
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> openCamera(context)
@@ -158,48 +158,35 @@ class MedicineScanFragment : BaseFragment() {
             closeKeyboard(binding.etQuery, requireContext())
         }
         
-        // Open keyboard for user input when "Ask Anything" is clicked
-//        btnAskAnything.setOnClickListener {
-//
-//            // Ensure EditText is focusable
-//            binding.etQuery.isFocusableInTouchMode = true
-//            binding.etQuery.requestFocus()
-//            openKeyboard(binding.etQuery, requireContext())
-//
-//
-//            // Open keyboard
-//            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//            imm.showSoftInput(binding.etQuery, InputMethodManager.SHOW_IMPLICIT)
-//        }
         binding.etQuery.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE ||
-                event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER) {
-
+                event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER
+            ) {
+                
                 val query = binding.etQuery.text.toString().trim()
                 val medicineName = binding.textView.text.toString()
-
+                
                 val prompt = "For the medicine $medicineName, you may relate the following question:\n\n$query"
-
+                
                 if (query.isNotEmpty()) {
                     sendQueryToLLM(prompt)
                 }
-
+                
                 // Hide the keyboard after submission
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.etQuery.windowToken, 0)
-
+                
                 true
             } else {
                 false
             }
         }
-
+        
         btnAskAnything.setOnClickListener {
             binding.etQuery.isFocusableInTouchMode = true
             bottomSheet.dismiss()
             binding.etQuery.requestFocus()
             openKeyboard(binding.etQuery, requireContext())
-            
             
             
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
