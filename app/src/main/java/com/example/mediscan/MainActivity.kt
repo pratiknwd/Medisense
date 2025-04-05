@@ -153,7 +153,6 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     fun loadFragment(fragmentManager: FragmentManager, fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
             .replace(R.id.frag_container, fragment, tag)
-            .addToBackStack(null)
             .commitAllowingStateLoss()
     }
 
