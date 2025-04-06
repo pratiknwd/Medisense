@@ -23,6 +23,10 @@
         android:title="My Reports" />
 
     <item
+        android:id="@+id/nav_medicine_plan"
+        android:title="Medicine Plan" />
+
+    <item
         android:id="@+id/nav_logout"
         android:title="Logout"
         android:titleCondensed="Logout"
