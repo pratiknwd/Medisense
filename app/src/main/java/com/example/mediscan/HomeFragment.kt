@@ -32,7 +32,7 @@ class HomeFragment : BaseFragment() {
         }
 
         binding.goToReportAnalyser.setOnClickListener{
-            (requireActivity() as MainActivity).loadFragment(requireActivity().supportFragmentManager, MyReportsFragment.newInstance(), PrescriptionFragment.FRAG_NAME)
+            (requireActivity() as MainActivity).loadFragment(requireActivity().supportFragmentManager, MyReportsFragment.newInstance(), MyReportsFragment.FRAG_NAME)
         }
         
         binding.goToMedicineBtn.setOnClickListener {

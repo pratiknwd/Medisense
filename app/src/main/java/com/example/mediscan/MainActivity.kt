@@ -26,6 +26,7 @@ import com.example.mediscan.auth.SHARED_PREF_NAME
 import com.example.mediscan.auth.SignInActivity
 import com.example.mediscan.databinding.ActivityMainBinding
 import com.example.mediscan.db.AppDatabase
+import com.example.mediscan.medicineplan.addmedicneplan.AddMedicinePlanFragment
 import com.example.mediscan.report.SmartReportFragment
 import com.example.mediscan.report.my_reports.MyReportsFragment
 import com.google.android.material.navigation.NavigationView
@@ -137,7 +138,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             R.id.nav_medicine -> loadFragment(supportFragmentManager, MedicineScanFragment.newInstance(), MedicineScanFragment.FRAG_NAME)
             R.id.nav_scan_report -> loadFragment(supportFragmentManager, ScanReportFragment.newInstance(), ScanReportFragment.FRAG_NAME)
             R.id.nav_my_reports -> loadFragment(supportFragmentManager, MyReportsFragment.newInstance(), MyReportsFragment.FRAG_NAME)
-            R.id.nav_my_reports -> loadFragment(supportFragmentManager, MyReportsFragment.newInstance(), MyReportsFragment.FRAG_NAME)
+            R.id.nav_create_medicine_plan -> loadFragment(supportFragmentManager, AddMedicinePlanFragment.newInstance(), AddMedicinePlanFragment.FRAG_NAME)
             
             R.id.nav_logout -> {
                 logoutUser(this)
