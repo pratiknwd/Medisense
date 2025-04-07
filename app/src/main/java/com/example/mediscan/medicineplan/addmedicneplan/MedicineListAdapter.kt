@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mediscan.R
 import com.example.mediscan.db.entity.MedicineDetails
 
-class MedicineListAdapter(private val medicines: List<MedicineDetails>) :
+class MedicineListAdapter(private val medicines: MutableList<MedicineDetails>) :
     RecyclerView.Adapter<MedicineListAdapter.MedicineViewHolder>() {
 
     class MedicineViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -28,6 +28,15 @@ class MedicineListAdapter(private val medicines: List<MedicineDetails>) :
         holder.medicineName.text = med.medicineName
         holder.dose.text = med.dose
         holder.frequency.text = med.frequency
+    }
+
+    fun addMedicine(medicine: MedicineDetails) {
+        medicines.add(medicine)
+        notifyItemInserted(medicines.size - 1)
+    }
+
+    fun getMedicineList(): List<MedicineDetails> {
+        return medicines
     }
 
     override fun getItemCount(): Int = medicines.size
