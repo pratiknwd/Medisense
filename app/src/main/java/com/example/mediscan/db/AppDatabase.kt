@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.mediscan.db.dao.DocumentDao
 import com.example.mediscan.db.dao.DocumentTypeDao
+import com.example.mediscan.db.dao.MedicineDao
 import com.example.mediscan.db.dao.MedicineDetailsDao
 import com.example.mediscan.db.dao.MedicinePlanDao
 import com.example.mediscan.db.dao.ReportDao
@@ -35,6 +36,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun reportDao(): ReportDao
     abstract fun reportTypeDao(): ReportTypeDao
     abstract fun medicineDetailsDao(): MedicineDetailsDao
+    abstract fun medicineDao(): MedicineDao
 
     companion object {
         val DATABASE_NAME = "app_database"

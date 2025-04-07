@@ -14,7 +14,8 @@ import androidx.room.PrimaryKey
     )]
 )
 data class MedicinePlan(
-    @PrimaryKey(autoGenerate = true) val planId: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val planId: Int = 0,
     val userId: Int,  // Foreign Key to User
     val status: String,  // "Active" or "Blocked"
     val startDate: String,  // Store as String (e.g., "2025-03-07")
