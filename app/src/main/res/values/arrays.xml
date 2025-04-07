@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dose_array">
+        <item>1 unit</item>
+        <item>2 units</item>
+        <item>3 units</item>
+        <item>4 units</item>
+    </string-array>
+
+    <string-array name="frequency_array">
+        <item>Once per day</item>
+        <item>Twice per day</item>
+        <item>3 times per day</item>
+        <item>4 times per day</item>
+        <item>5 times per day</item>
+    </string-array>
+
+    <string-array name="food_instruction_array">
+        <item>Before food</item>
+        <item>After food</item>
+    </string-array>
+
+    <string-array name="status_array">
+        <item>Active</item>
+        <item>Inactive</item>
+    </string-array>
+</resources>
