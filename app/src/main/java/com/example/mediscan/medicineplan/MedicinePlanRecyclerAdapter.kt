@@ -24,12 +24,12 @@ class MedicinePlanRecyclerAdapter(
         val startEnd: TextView = itemView.findViewById(R.id.startEnd)
         val status: TextView = itemView.findViewById(R.id.status)
         val inactiveBtn: MaterialButton = itemView.findViewById(R.id.inactiveBtn)
-        val editBtn: MaterialButton = itemView.findViewById(R.id.editBtn)
+//        val editBtn: MaterialButton = itemView.findViewById(R.id.editBtn)
         val deleteBtn: MaterialButton = itemView.findViewById(R.id.deleteBtn)
         
         init {
             inactiveBtn.setOnClickListener { onInactiveClick(medicinePlans[adapterPosition].plan.planId) }
-            editBtn.setOnClickListener { onEditClick(medicinePlans[adapterPosition].plan.planId) }
+//            editBtn.setOnClickListener { onEditClick(medicinePlans[adapterPosition].plan.planId) }
             deleteBtn.setOnClickListener { onDeleteClick(medicinePlans[adapterPosition].plan.planId) }
         }
     }

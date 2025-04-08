@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.mediscan.db.dao.DocumentDao
 import com.example.mediscan.db.dao.DocumentTypeDao
+import com.example.mediscan.db.dao.MedicalSummaryDao
 import com.example.mediscan.db.dao.MedicineDao
 import com.example.mediscan.db.dao.MedicineDetailsDao
 import com.example.mediscan.db.dao.MedicinePlanDao
@@ -15,6 +16,7 @@ import com.example.mediscan.db.dao.UserDao
 import com.example.mediscan.db.dao.UserFoodTimingDao
 import com.example.mediscan.db.entity.Document
 import com.example.mediscan.db.entity.DocumentType
+import com.example.mediscan.db.entity.MedicalSummary
 import com.example.mediscan.db.entity.MedicineDetails
 import com.example.mediscan.db.entity.MedicinePlan
 import com.example.mediscan.db.entity.Report
@@ -23,7 +25,17 @@ import com.example.mediscan.db.entity.User
 import com.example.mediscan.db.entity.UserFoodTiming
 
 @Database(
-    entities = [User::class, MedicinePlan::class, UserFoodTiming::class, Document::class, DocumentType::class, Report::class, ReportType::class, MedicineDetails::class],
+    entities = [
+        User::class,
+        MedicinePlan::class,
+        UserFoodTiming::class,
+        Document::class,
+        DocumentType::class,
+        Report::class,
+        ReportType::class,
+        MedicineDetails::class,
+        MedicalSummary::class
+    ],
     version = 1,
     exportSchema = false
 )
@@ -37,6 +49,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun reportTypeDao(): ReportTypeDao
     abstract fun medicineDetailsDao(): MedicineDetailsDao
     abstract fun medicineDao(): MedicineDao
+    abstract fun medicalSummaryDao() :MedicalSummaryDao
 
     companion object {
         val DATABASE_NAME = "app_database"

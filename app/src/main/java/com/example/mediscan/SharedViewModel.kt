@@ -250,6 +250,13 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
         }
     }
 
+    fun getMedicalSummary(prompt: String, callback: (String?) -> Unit) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val summaryResponse = getResponseFromGemini(prompt) // Call your Gemini API
+            callback(summaryResponse)
+        }
+    }
+
     
     private fun getUserId(context: Context): Int {
         val sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
@@ -261,7 +268,7 @@ class SharedViewModel(private val applicationContext: Application) : AndroidView
             val userId = getUserId(applicationContext)
             val reportTypeDao = db.reportTypeDao()
             //todo: get 'reportTypeName' from image uploaded by user using LLM
-            val reportType = ReportType(userId = userId, reportTypeName = "Blood Test")
+            val reportType = ReportType(userId = userId, reportTypeName = "Blood Test", )
             val reportTypeId = reportTypeDao.insertReportType(reportType)
             val toEntity = reportModel.mapNotNull { it.toEntity(userId, reportTypeId.toInt()) }
             val reportDao = db.reportDao()

@@ -26,5 +26,6 @@ data class ReportType(
     val reportTypeId: Int = 0,
     val userId: Int,  // Foreign Key
     // val documentId: Int,  // Foreign Key
-    val reportTypeName: String
+    val reportTypeName: String,
+    val timestamp: Long = System.currentTimeMillis()
 )

@@ -8,8 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mediscan.R
 import com.example.mediscan.db.entity.ReportType
 import com.google.android.material.button.MaterialButton
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 import kotlin.random.Random
 
 class MyReportsAdapter(
@@ -27,7 +30,9 @@ class MyReportsAdapter(
         holder.apply {
             testName.text = myReportsList[position].reportTypeName
             bookingId.text = "Booking ID: ${(1_000_000_000..9_999_999_999).random()}"
-            receivedDate.text = "Report Received: ${generateRandomDate()}"
+            val sdf = SimpleDateFormat("d MMM yyyy", Locale.getDefault())
+            val formattedDate = sdf.format(Date(myReportsList[position].timestamp))
+            holder.receivedDate.text = "Report Received: $formattedDate"
         }
     }
     
